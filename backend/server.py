@@ -324,6 +324,11 @@ class RoleSelectionRequest(BaseModel):
     phone: Optional[str] = None
     company_name: Optional[str] = None
 
+class UserProfileUpdate(BaseModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    company_name: Optional[str] = None
+
 class GearItem(BaseModel):
     gear_id: str
     supplier_id: str
@@ -779,7 +784,7 @@ Only respond with valid JSON, no additional text."""
         logging.info(f"AI analysis successful for project {project_id}: {len(ai_analysis_result.get('gear_recommendations', []))} recommendations")
         
     except json.JSONDecodeError as e:
-        analysis_error = f"AI returned invalid JSON format"
+        analysis_error = "AI returned invalid JSON format"
         logging.error(f"JSON decode error for project {project_id}: {str(e)}, Response: {ai_response[:200] if 'ai_response' in locals() else 'No response'}")
         ai_analysis_result = {
             "error": "format_error",
@@ -931,7 +936,7 @@ Only respond with valid JSON, no additional text."""
         logging.info(f"Retry successful for project {project_id}")
         
     except json.JSONDecodeError as e:
-        analysis_error = f"AI returned invalid JSON format"
+        analysis_error = "AI returned invalid JSON format"
         logging.error(f"JSON decode error on retry for project {project_id}: {str(e)}")
         ai_analysis_result = {
             "error": "format_error",
@@ -1771,6 +1776,43 @@ async def get_user(request: Request, user_id: str, authorization: Optional[str] 
         "company_name": user_doc.get("company_name"),
         "role": user_doc["role"]
     }
+
+@api_router.put("/users/profile")
+async def update_user_profile(request: Request, data: UserProfileUpdate, authorization: Optional[str] = Header(None)):
+    """Update current user's profile"""
+    user = await get_current_user(request, authorization)
+    
+    update_data = {}
+    
+    if data.name is not None:
+        if len(data.name.strip()) < 2:
+            raise HTTPException(status_code=400, detail="Name must be at least 2 characters")
+        update_data["name"] = data.name.strip()
+    
+    if data.phone is not None:
+        update_data["phone"] = data.phone.strip() if data.phone.strip() else None
+    
+    if data.company_name is not None:
+        # Only rental houses can update company name
+        if user.role == 'rental_house':
+            update_data["company_name"] = data.company_name.strip() if data.company_name.strip() else None
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No valid fields to update")
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": update_data}
+    )
+    
+    # Return updated user
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    if isinstance(user_doc['created_at'], str):
+        user_doc['created_at'] = datetime.fromisoformat(user_doc['created_at'])
+    
+    logging.info(f"User {user.user_id} updated profile: {list(update_data.keys())}")
+    
+    return User(**user_doc)
 
 # Include router
 app.include_router(api_router)

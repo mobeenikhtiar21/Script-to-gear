@@ -20,6 +20,7 @@ import ManageGear from './pages/ManageGear';
 import Leads from './pages/Leads';
 import LeadDetail from './pages/LeadDetail';
 import PaymentSuccess from './pages/PaymentSuccess';
+import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function AppRouter() {
@@ -59,6 +60,7 @@ export default function AppRouter() {
       
       {/* Shared Routes */}
       <Route path="/payment-success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
     </Routes>
   );
 }

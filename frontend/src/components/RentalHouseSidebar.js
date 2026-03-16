@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Film, LayoutDashboard, Package, FileText, Settings, LogOut } from 'lucide-react';
+import { Film, LayoutDashboard, Package, FileText, Settings, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 
@@ -79,10 +79,23 @@ export default function RentalHouseSidebar({ user, onLogout }) {
       
       {/* User Section */}
       <div className="p-6 border-t border-[#2A2A2A]">
-        <div className="mb-4">
-          <div className="text-white text-sm font-medium mb-0.5">{user?.company_name || user?.name}</div>
-          <div className="text-[#666666] text-xs truncate">{user?.email}</div>
-        </div>
+        <button
+          onClick={() => navigate('/profile')}
+          className="w-full mb-4 flex items-center gap-3 p-2 rounded hover:bg-[#1A1A1A] transition-colors"
+          data-testid="sidebar-profile"
+        >
+          {user?.picture ? (
+            <img src={user.picture} alt={user?.name} className="w-8 h-8 rounded-full" />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-[#0066FF]/20 flex items-center justify-center">
+              <User className="w-4 h-4 text-[#0066FF]" />
+            </div>
+          )}
+          <div className="text-left flex-1">
+            <div className="text-white text-sm font-medium truncate">{user?.company_name || user?.name}</div>
+            <div className="text-[#666666] text-xs truncate">{user?.email}</div>
+          </div>
+        </button>
         <Button
           onClick={onLogout}
           variant="ghost"
