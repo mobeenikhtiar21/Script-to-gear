@@ -34,7 +34,7 @@ export default function SavedProjects() {
     return (
       <FilmmakerLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </FilmmakerLayout>
     );
@@ -57,7 +57,7 @@ export default function SavedProjects() {
               <p className="text-[#666666] mb-6">Start by creating your first project</p>
               <Button
                 onClick={() => navigate('/filmmaker/create-project')}
-                className="bg-[#0066FF] hover:bg-[#0052CC] text-white"
+                className="bg-[#800020] hover:bg-[#5C0A1F] text-white"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
                 Create Project
@@ -73,7 +73,7 @@ export default function SavedProjects() {
               return (
                 <Card
                   key={project.project_id}
-                  className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 transition-all group cursor-pointer"
+                  className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#800020]/50 transition-all group cursor-pointer"
                   onClick={() => navigate(`/filmmaker/projects/${project.project_id}`)}
                   data-testid={`project-${project.project_id}`}
                 >
@@ -98,7 +98,7 @@ export default function SavedProjects() {
                         </div>
                         {hasAnalysis && project.ai_analysis_result.gear_recommendations && (
                           <div className="flex items-center gap-1 text-[#666666] text-sm">
-                            <Sparkles className="w-3 h-3 text-[#0066FF]" />
+                            <Sparkles className="w-3 h-3 text-[#800020]" />
                             <span className="text-[#A1A1A1]">
                               {project.ai_analysis_result.gear_recommendations.length} gear recommendations
                             </span>
@@ -108,7 +108,7 @@ export default function SavedProjects() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-[#0066FF] hover:bg-[#0066FF]/10 group-hover:bg-[#0066FF]/10 flex-shrink-0"
+                        className="text-[#800020] hover:bg-[#800020]/10 group-hover:bg-[#800020]/10 flex-shrink-0"
                         data-testid={`view-${project.project_id}`}
                       >
                         View

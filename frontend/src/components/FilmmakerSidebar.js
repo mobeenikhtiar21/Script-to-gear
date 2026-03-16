@@ -67,7 +67,7 @@ export default function FilmmakerSidebar({ user, onLogout }) {
               onClick={() => navigate(item.path)}
               className={`w-full px-6 py-3 flex items-center gap-3 transition-all ${
                 active
-                  ? 'bg-[#0066FF]/10 border-r-2 border-[#0066FF] text-[#0066FF]'
+                  ? 'bg-[#800020]/10 border-r-2 border-[#800020] text-[#800020]'
                   : 'text-[#808080] hover:bg-[#0A0A0A] hover:text-white border-r-2 border-transparent'
               }`}
               data-testid={item.testId}
@@ -89,8 +89,8 @@ export default function FilmmakerSidebar({ user, onLogout }) {
           {user?.picture ? (
             <img src={user.picture} alt={user?.name} className="w-8 h-8 rounded-full border border-[#2A2A2A]" />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-[#0066FF]/20 flex items-center justify-center border border-[#2A2A2A]">
-              <User className="w-4 h-4 text-[#0066FF]" />
+            <div className="w-8 h-8 rounded-full bg-[#800020]/20 flex items-center justify-center border border-[#2A2A2A]">
+              <User className="w-4 h-4 text-[#800020]" />
             </div>
           )}
           <div className="text-left flex-1 min-w-0">

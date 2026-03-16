@@ -95,7 +95,7 @@ export default function Profile() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#000000] flex items-center justify-center">
-        <div className="text-[#0066FF] font-mono" data-testid="loading-spinner">Loading...</div>
+        <div className="text-[#800020] font-mono" data-testid="loading-spinner">Loading...</div>
       </div>
     );
   }
@@ -133,8 +133,8 @@ export default function Profile() {
                       className="w-20 h-20 rounded-lg object-cover border border-[#2A2A2A]"
                     />
                   ) : (
-                    <div className="w-20 h-20 rounded-lg bg-[#0066FF]/20 flex items-center justify-center border border-[#2A2A2A]">
-                      <User className="w-8 h-8 text-[#0066FF]" />
+                    <div className="w-20 h-20 rounded-lg bg-[#800020]/20 flex items-center justify-center border border-[#2A2A2A]">
+                      <User className="w-8 h-8 text-[#800020]" />
                     </div>
                   )}
                 </div>
@@ -174,7 +174,7 @@ export default function Profile() {
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
                   placeholder="Your full name"
-                  className="bg-[#050505] border-[#2A2A2A] text-white focus:border-[#0066FF]"
+                  className="bg-[#050505] border-[#2A2A2A] text-white focus:border-[#800020]"
                   data-testid="name-input"
                 />
               </div>
@@ -206,7 +206,7 @@ export default function Profile() {
                   value={formData.phone}
                   onChange={(e) => handleChange('phone', e.target.value)}
                   placeholder="+1 (555) 123-4567"
-                  className="bg-[#050505] border-[#2A2A2A] text-white focus:border-[#0066FF] font-mono"
+                  className="bg-[#050505] border-[#2A2A2A] text-white focus:border-[#800020] font-mono"
                   data-testid="phone-input"
                 />
               </div>
@@ -223,7 +223,7 @@ export default function Profile() {
                     value={formData.company_name}
                     onChange={(e) => handleChange('company_name', e.target.value)}
                     placeholder="Your rental company name"
-                    className="bg-[#050505] border-[#2A2A2A] text-white focus:border-[#0066FF]"
+                    className="bg-[#050505] border-[#2A2A2A] text-white focus:border-[#800020]"
                     data-testid="company-name-input"
                   />
                 </div>
@@ -238,7 +238,7 @@ export default function Profile() {
               disabled={saving || !hasChanges}
               className={`${
                 hasChanges 
-                  ? 'bg-[#0066FF] hover:bg-[#0052CC] shadow-[0_0_15px_rgba(0,102,255,0.3)]' 
+                  ? 'bg-[#800020] hover:bg-[#5C0A1F] shadow-[0_0_15px_rgba(128,0,32,0.3)]' 
                   : 'bg-[#2A2A2A] cursor-not-allowed'
               } text-white px-6 rounded-sm font-medium`}
               data-testid="save-button"

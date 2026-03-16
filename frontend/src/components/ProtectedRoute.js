@@ -36,7 +36,7 @@ export default function ProtectedRoute({ children }) {
   if (isAuthenticated === null) {
     return (
       <div className="min-h-screen bg-[#121212] flex items-center justify-center">
-        <div className="text-[#0066FF] text-lg" data-testid="loading-spinner">Loading...</div>
+        <div className="text-[#800020] text-lg" data-testid="loading-spinner">Loading...</div>
       </div>
     );
   }

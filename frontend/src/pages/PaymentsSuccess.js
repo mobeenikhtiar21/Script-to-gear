@@ -31,7 +31,7 @@ export default function PaymentsSuccess() {
             </p>
             <Button
               onClick={() => navigate('/rental-house/payments')}
-              className="bg-[#0066FF] hover:bg-[#0052CC] text-white w-full"
+              className="bg-[#800020] hover:bg-[#5C0A1F] text-white w-full"
               data-testid="view-status-button"
             >
               View Payment Status

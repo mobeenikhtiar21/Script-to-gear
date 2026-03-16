@@ -79,7 +79,7 @@ export default function CreateProject() {
           <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
             <CardHeader>
               <CardTitle className="text-white text-lg flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-[#0066FF]" />
+                <Sparkles className="w-5 h-5 text-[#800020]" />
                 Script Input
               </CardTitle>
             </CardHeader>
@@ -89,7 +89,7 @@ export default function CreateProject() {
                   value={scriptText}
                   onChange={(e) => setScriptText(e.target.value)}
                   placeholder="Paste your script or scene description here...\n\nExample:\nEXT. MOODY NIGHT EXTERIOR - ABANDONED WAREHOUSE\n\nThe rain-soaked streets glisten under flickering streetlights. Deep shadows require low-light capable cameras...\n\nINT. DIALOGUE-HEAVY INTERVIEW - DAY\n\nTwo characters in intimate conversation. Professional audio critical for clean dialogue capture..."
-                  className="bg-[#121212] border-[#333333] text-white min-h-[400px] font-mono text-sm focus:border-[#0066FF] transition-colors"
+                  className="bg-[#121212] border-[#333333] text-white min-h-[400px] font-mono text-sm focus:border-[#800020] transition-colors"
                   required
                   data-testid="script-textarea"
                 />
@@ -108,7 +108,7 @@ export default function CreateProject() {
                   type="button"
                   variant="outline"
                   onClick={() => document.getElementById('file-upload').click()}
-                  className="bg-transparent border-[#333333] text-[#A1A1A1] hover:border-[#0066FF] hover:text-[#0066FF] hover:bg-[#0066FF]/5"
+                  className="bg-transparent border-[#333333] text-[#A1A1A1] hover:border-[#800020] hover:text-[#800020] hover:bg-[#800020]/5"
                   data-testid="upload-button"
                 >
                   <Upload className="w-4 h-4 mr-2" />
@@ -138,7 +138,7 @@ export default function CreateProject() {
                   id="audio-switch"
                   checked={includeAudio}
                   onCheckedChange={setIncludeAudio}
-                  className="data-[state=checked]:bg-[#0066FF]"
+                  className="data-[state=checked]:bg-[#800020]"
                   data-testid="audio-toggle"
                 />
               </div>
@@ -156,7 +156,7 @@ export default function CreateProject() {
                   id="lighting-switch"
                   checked={includeLighting}
                   onCheckedChange={setIncludeLighting}
-                  className="data-[state=checked]:bg-[#0066FF]"
+                  className="data-[state=checked]:bg-[#800020]"
                   data-testid="lighting-toggle"
                 />
               </div>
@@ -164,10 +164,10 @@ export default function CreateProject() {
           </Card>
           
           {/* Info Card */}
-          <Card className="bg-[#0066FF]/5 border-[#0066FF]/20">
+          <Card className="bg-[#800020]/5 border-[#800020]/20">
             <CardContent className="p-4">
               <div className="flex gap-3">
-                <Info className="w-5 h-5 text-[#0066FF] flex-shrink-0 mt-0.5" />
+                <Info className="w-5 h-5 text-[#800020] flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-[#A1A1A1]">
                   <span className="text-white font-medium">Tip:</span> Include scene descriptions like "moody night exterior" or "dialogue-heavy interview" for more accurate AI recommendations.
                 </div>
@@ -180,7 +180,7 @@ export default function CreateProject() {
             <Button
               type="submit"
               disabled={analyzing || !scriptText.trim()}
-              className="bg-[#0066FF] hover:bg-[#0052CC] text-white px-8 py-6 text-lg shadow-[0_0_20px_rgba(0,102,255,0.3)] hover:shadow-[0_0_30px_rgba(0,102,255,0.5)] transition-all"
+              className="bg-[#800020] hover:bg-[#5C0A1F] text-white px-8 py-6 text-lg shadow-[0_0_20px_rgba(128,0,32,0.3)] hover:shadow-[0_0_30px_rgba(128,0,32,0.5)] transition-all"
               data-testid="analyze-button"
             >
               {analyzing ? (

@@ -45,7 +45,7 @@ export default function RentalHouseDashboard() {
     return (
       <RentalHouseLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </RentalHouseLayout>
     );
@@ -69,7 +69,7 @@ export default function RentalHouseDashboard() {
         
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 transition-colors">
+          <Card className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#800020]/50 transition-colors">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="text-[#666666] text-sm">New Leads</div>
@@ -82,7 +82,7 @@ export default function RentalHouseDashboard() {
             </CardContent>
           </Card>
           
-          <Card className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 transition-colors">
+          <Card className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#800020]/50 transition-colors">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="text-[#666666] text-sm">Pending Quotes</div>
@@ -95,7 +95,7 @@ export default function RentalHouseDashboard() {
             </CardContent>
           </Card>
           
-          <Card className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 transition-colors">
+          <Card className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#800020]/50 transition-colors">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="text-[#666666] text-sm">Total Gear Items</div>
@@ -115,7 +115,7 @@ export default function RentalHouseDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Button
               onClick={() => navigate('/rental-house/inventory')}
-              className="bg-[#0066FF] hover:bg-[#0052CC] text-white p-6 h-auto justify-start shadow-[0_0_15px_rgba(0,102,255,0.3)]"
+              className="bg-[#800020] hover:bg-[#5C0A1F] text-white p-6 h-auto justify-start shadow-[0_0_15px_rgba(128,0,32,0.3)]"
               data-testid="manage-inventory-button"
             >
               <Plus className="w-5 h-5 mr-3" />
@@ -147,7 +147,7 @@ export default function RentalHouseDashboard() {
             <Button
               variant="ghost"
               onClick={() => navigate('/rental-house/leads')}
-              className="text-[#0066FF] hover:text-[#0052CC] hover:bg-[#0066FF]/10"
+              className="text-[#800020] hover:text-[#9A1B3A] hover:bg-[#800020]/10"
             >
               View All
             </Button>
@@ -165,7 +165,7 @@ export default function RentalHouseDashboard() {
               {recentLeads.map((lead) => (
                 <Card
                   key={lead.lead_id}
-                  className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 cursor-pointer transition-all"
+                  className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#800020]/50 cursor-pointer transition-all"
                   onClick={() => navigate(`/rental-house/leads/${lead.lead_id}`)}
                   data-testid={`lead-${lead.lead_id}`}
                 >

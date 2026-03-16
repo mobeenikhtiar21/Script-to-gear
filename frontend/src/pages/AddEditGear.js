@@ -143,7 +143,7 @@ export default function AddEditGear() {
     return (
       <RentalHouseLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </RentalHouseLayout>
     );
@@ -268,7 +268,7 @@ export default function AddEditGear() {
                   id="available"
                   checked={formData.available}
                   onCheckedChange={(checked) => updateField('available', checked)}
-                  className="border-[#333333] data-[state=checked]:bg-[#0066FF]"
+                  className="border-[#333333] data-[state=checked]:bg-[#800020]"
                   data-testid="available-checkbox"
                 />
                 <Label htmlFor="available" className="text-[#A1A1A1] cursor-pointer">
@@ -309,7 +309,7 @@ export default function AddEditGear() {
             <Button
               type="submit"
               disabled={saving}
-              className="bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_0_15px_rgba(0,102,255,0.3)]"
+              className="bg-[#800020] hover:bg-[#5C0A1F] text-white shadow-[0_0_15px_rgba(128,0,32,0.3)]"
               data-testid="save-button"
             >
               {saving ? (

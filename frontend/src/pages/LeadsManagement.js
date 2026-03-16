@@ -51,7 +51,7 @@ export default function LeadsManagement() {
     return (
       <RentalHouseLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </RentalHouseLayout>
     );
@@ -123,7 +123,7 @@ export default function LeadsManagement() {
             {filteredLeads.map((lead) => (
               <Card
                 key={lead.lead_id}
-                className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 cursor-pointer transition-all group"
+                className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#800020]/50 cursor-pointer transition-all group"
                 onClick={() => navigate(`/rental-house/leads/${lead.lead_id}`)}
                 data-testid={`lead-${lead.lead_id}`}
               >
@@ -143,7 +143,7 @@ export default function LeadsManagement() {
                         Received: {new Date(lead.created_at).toLocaleDateString()} at {new Date(lead.created_at).toLocaleTimeString()}
                       </div>
                       {lead.quote_details && (
-                        <div className="text-sm text-[#0066FF] mt-2">
+                        <div className="text-sm text-[#800020] mt-2">
                           Quote Total: ${lead.quote_details.total_amount?.toFixed(2) || '0.00'}
                         </div>
                       )}
@@ -151,7 +151,7 @@ export default function LeadsManagement() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-[#0066FF] hover:bg-[#0066FF]/10 group-hover:bg-[#0066FF]/10"
+                      className="text-[#800020] hover:bg-[#800020]/10 group-hover:bg-[#800020]/10"
                       data-testid={`view-${lead.lead_id}`}
                     >
                       View Details

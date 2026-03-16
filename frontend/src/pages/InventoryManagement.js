@@ -68,7 +68,7 @@ export default function InventoryManagement() {
     return (
       <RentalHouseLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </RentalHouseLayout>
     );
@@ -85,7 +85,7 @@ export default function InventoryManagement() {
           </div>
           <Button
             onClick={() => navigate('/rental-house/inventory/add')}
-            className="bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_0_15px_rgba(0,102,255,0.3)]"
+            className="bg-[#800020] hover:bg-[#5C0A1F] text-white shadow-[0_0_15px_rgba(128,0,32,0.3)]"
             data-testid="add-gear-button"
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -101,7 +101,7 @@ export default function InventoryManagement() {
               <p className="text-[#666666] mb-6">Start building your inventory</p>
               <Button
                 onClick={() => navigate('/rental-house/inventory/add')}
-                className="bg-[#0066FF] hover:bg-[#0052CC] text-white"
+                className="bg-[#800020] hover:bg-[#5C0A1F] text-white"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Your First Gear
@@ -136,12 +136,12 @@ export default function InventoryManagement() {
                           {item.category}
                         </span>
                       </TableCell>
-                      <TableCell className="text-[#0066FF] font-semibold">${item.daily_rate}</TableCell>
+                      <TableCell className="text-[#800020] font-semibold">${item.daily_rate}</TableCell>
                       <TableCell>
                         <Switch
                           checked={item.available}
                           onCheckedChange={() => toggleAvailability(item.gear_id, item.available)}
-                          className="data-[state=checked]:bg-[#0066FF]"
+                          className="data-[state=checked]:bg-[#800020]"
                           data-testid={`availability-${item.gear_id}`}
                         />
                       </TableCell>

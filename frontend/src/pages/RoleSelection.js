@@ -78,7 +78,7 @@ export default function RoleSelection() {
                 onClick={() => setRole('filmmaker')}
                 className={`w-full p-6 border text-left transition-all ${
                   role === 'filmmaker'
-                    ? 'border-[#0066FF] bg-[#0066FF]/10'
+                    ? 'border-[#800020] bg-[#800020]/10'
                     : 'border-[#2A2A2A] bg-[#050505] hover:border-[#404040]'
                 }`}
                 data-testid="role-filmmaker-button"
@@ -94,7 +94,7 @@ export default function RoleSelection() {
                 onClick={() => setRole('rental_house')}
                 className={`w-full p-6 border text-left transition-all ${
                   role === 'rental_house'
-                    ? 'border-[#0066FF] bg-[#0066FF]/10'
+                    ? 'border-[#800020] bg-[#800020]/10'
                     : 'border-[#2A2A2A] bg-[#050505] hover:border-[#404040]'
                 }`}
                 data-testid="role-rental-house-button"
@@ -143,7 +143,7 @@ export default function RoleSelection() {
             <Button
               type="submit"
               disabled={!role || loading}
-              className="w-full bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_0_15px_rgba(0,102,255,0.3)] rounded-sm font-medium"
+              className="w-full bg-[#800020] hover:bg-[#5C0A1F] text-white shadow-[0_0_15px_rgba(128,0,32,0.3)] rounded-sm font-medium"
               data-testid="submit-role-button"
             >
               {loading ? 'Saving...' : 'Continue'}

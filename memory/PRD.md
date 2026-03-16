@@ -113,7 +113,7 @@ Build a production-ready full-stack marketplace application called "Script-to-Ge
   - Pure black (#000000) background for true dark theme
   - Sharp, grid-based technical aesthetic
   - Inter + JetBrains Mono typography
-  - Blue (#0066FF) accent color maintained
+  - Deep maroon (#800020) accent color for buttons and CTAs
   - Role selection page with logo
   - Updated all layouts for consistent styling
 

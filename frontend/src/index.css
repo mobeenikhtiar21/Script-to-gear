@@ -10,20 +10,25 @@
     --card-foreground: 0 0% 93%;
     --popover: 0 0% 7%;
     --popover-foreground: 0 0% 93%;
-    --primary: 217 100% 50%;
+    --primary: 345 89% 28%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 93%;
     --muted: 0 0% 10%;
     --muted-foreground: 0 0% 63%;
-    --accent: 217 100% 50%;
+    --accent: 345 89% 28%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 16%;
     --input: 0 0% 4%;
-    --ring: 217 100% 50%;
+    --ring: 345 89% 28%;
     --radius: 0.25rem;
+    
+    /* Custom maroon colors */
+    --maroon: #800020;
+    --maroon-dark: #5C0A1F;
+    --maroon-light: #9A1B3A;
   }
 }
 
@@ -62,8 +67,8 @@
   }
   
   /* Glow effects for interactive elements */
-  .glow-blue {
-    box-shadow: 0 0 20px rgba(0, 102, 255, 0.3);
+  .glow-maroon {
+    box-shadow: 0 0 20px rgba(128, 0, 32, 0.3);
   }
   
   .glow-red {

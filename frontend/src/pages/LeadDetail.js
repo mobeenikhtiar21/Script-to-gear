@@ -96,7 +96,7 @@ export default function LeadDetail() {
     return (
       <FilmmakerLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </FilmmakerLayout>
     );
@@ -156,7 +156,7 @@ export default function LeadDetail() {
             <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
-                  <Building2 className="w-5 h-5 text-[#0066FF]" />
+                  <Building2 className="w-5 h-5 text-[#800020]" />
                   Rental House
                 </CardTitle>
               </CardHeader>
@@ -183,7 +183,7 @@ export default function LeadDetail() {
               <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
-                    <Package className="w-5 h-5 text-[#0066FF]" />
+                    <Package className="w-5 h-5 text-[#800020]" />
                     Equipment List
                   </CardTitle>
                 </CardHeader>
@@ -204,7 +204,7 @@ export default function LeadDetail() {
                               Quantity: {item.quantity} | Rate: ${item.rate?.toFixed(2)}/day
                             </div>
                           </div>
-                          <div className="text-[#0066FF] font-semibold text-lg">
+                          <div className="text-[#800020] font-semibold text-lg">
                             ${item.subtotal?.toFixed(2)}
                           </div>
                         </div>
@@ -214,7 +214,7 @@ export default function LeadDetail() {
                     {/* Total */}
                     <div className="border-t border-[#333333] pt-4 mt-4 flex justify-between items-center">
                       <span className="text-white font-semibold text-lg">Total</span>
-                      <span className="text-[#0066FF] font-bold text-2xl">
+                      <span className="text-[#800020] font-bold text-2xl">
                         ${quote.total_amount?.toFixed(2)}
                         <span className="text-sm text-[#666666]">/day</span>
                       </span>
@@ -241,7 +241,7 @@ export default function LeadDetail() {
               <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-[#0066FF]" />
+                    <FileText className="w-5 h-5 text-[#800020]" />
                     Message from Rental House
                   </CardTitle>
                 </CardHeader>
@@ -258,14 +258,14 @@ export default function LeadDetail() {
           <div className="space-y-6">
             {/* Quote Summary Card */}
             {lead.status === 'quoted' && quote && (
-              <Card className="bg-gradient-to-br from-[#0066FF]/10 to-[#0066FF]/5 border-[#0066FF]/30">
+              <Card className="bg-gradient-to-br from-[#800020]/10 to-[#800020]/5 border-[#800020]/30">
                 <CardHeader>
                   <CardTitle className="text-white">Quote Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center py-4">
                     <div className="text-[#666666] text-sm mb-2">Total Amount</div>
-                    <div className="text-[#0066FF] font-bold text-4xl">
+                    <div className="text-[#800020] font-bold text-4xl">
                       ${quote.total_amount?.toFixed(2)}
                     </div>
                     <div className="text-[#666666] text-sm mt-1">per day</div>
@@ -296,7 +296,7 @@ export default function LeadDetail() {
                     <Button
                       onClick={handleAcceptAndPay}
                       disabled={processing}
-                      className="w-full bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_0_15px_rgba(0,102,255,0.3)] h-12"
+                      className="w-full bg-[#800020] hover:bg-[#5C0A1F] text-white shadow-[0_0_15px_rgba(128,0,32,0.3)] h-12"
                       data-testid="accept-pay-button"
                     >
                       {processing ? (
@@ -354,7 +354,7 @@ export default function LeadDetail() {
                   <Button
                     variant="ghost"
                     onClick={() => navigate(`/filmmaker/projects/${project.project_id}`)}
-                    className="w-full text-[#0066FF] hover:bg-[#0066FF]/10 justify-start"
+                    className="w-full text-[#800020] hover:bg-[#800020]/10 justify-start"
                     data-testid="view-project-button"
                   >
                     <FileText className="w-4 h-4 mr-2" />

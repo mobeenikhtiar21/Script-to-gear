@@ -40,7 +40,7 @@ export default function FilmmakerDashboard() {
     return (
       <FilmmakerLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </FilmmakerLayout>
     );
@@ -57,14 +57,14 @@ export default function FilmmakerDashboard() {
         
         {/* New Analysis Card */}
         <Card 
-          className="bg-gradient-to-br from-[#0066FF]/10 to-[#0066FF]/5 border-[#0066FF]/30 mb-8 cursor-pointer hover:border-[#0066FF]/50 transition-all group"
+          className="bg-gradient-to-br from-[#800020]/10 to-[#800020]/5 border-[#800020]/30 mb-8 cursor-pointer hover:border-[#800020]/50 transition-all group"
           onClick={() => navigate('/filmmaker/create-project')}
           data-testid="new-analysis-card"
         >
           <CardContent className="p-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-[#0066FF] rounded-lg flex items-center justify-center group-hover:shadow-[0_0_20px_rgba(0,102,255,0.4)] transition-all">
+                <div className="w-16 h-16 bg-[#800020] rounded-lg flex items-center justify-center group-hover:shadow-[0_0_20px_rgba(128,0,32,0.4)] transition-all">
                   <Sparkles className="w-8 h-8 text-white" />
                 </div>
                 <div>
@@ -73,7 +73,7 @@ export default function FilmmakerDashboard() {
                 </div>
               </div>
               <Button
-                className="bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_0_15px_rgba(0,102,255,0.3)]"
+                className="bg-[#800020] hover:bg-[#5C0A1F] text-white shadow-[0_0_15px_rgba(128,0,32,0.3)]"
                 data-testid="new-analysis-button"
               >
                 Start Analysis
@@ -90,7 +90,7 @@ export default function FilmmakerDashboard() {
               <Button
                 variant="ghost"
                 onClick={() => navigate('/filmmaker/projects')}
-                className="text-[#0066FF] hover:text-[#0052CC] hover:bg-[#0066FF]/10"
+                className="text-[#800020] hover:text-[#9A1B3A] hover:bg-[#800020]/10"
               >
                 View All
               </Button>
@@ -105,7 +105,7 @@ export default function FilmmakerDashboard() {
                 <p className="text-[#666666] mb-6">Start by analyzing your first script</p>
                 <Button
                   onClick={() => navigate('/filmmaker/create-project')}
-                  className="bg-[#0066FF] hover:bg-[#0052CC] text-white"
+                  className="bg-[#800020] hover:bg-[#5C0A1F] text-white"
                 >
                   <Sparkles className="w-4 h-4 mr-2" />
                   Create First Project
@@ -121,7 +121,7 @@ export default function FilmmakerDashboard() {
                 return (
                   <Card
                     key={project.project_id}
-                    className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 transition-all group"
+                    className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#800020]/50 transition-all group"
                     data-testid={`project-${project.project_id}`}
                   >
                     <CardContent className="p-6">
@@ -156,7 +156,7 @@ export default function FilmmakerDashboard() {
                           onClick={() => navigate(`/filmmaker/projects/${project.project_id}`)}
                           variant="ghost"
                           size="sm"
-                          className="text-[#0066FF] hover:bg-[#0066FF]/10 group-hover:bg-[#0066FF]/10"
+                          className="text-[#800020] hover:bg-[#800020]/10 group-hover:bg-[#800020]/10"
                           data-testid={`view-project-${project.project_id}`}
                         >
                           View

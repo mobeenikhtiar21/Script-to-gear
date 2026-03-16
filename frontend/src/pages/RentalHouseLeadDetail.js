@@ -181,7 +181,7 @@ export default function RentalHouseLeadDetail() {
     return (
       <RentalHouseLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </RentalHouseLayout>
     );
@@ -240,7 +240,7 @@ export default function RentalHouseLeadDetail() {
             <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
-                  <User className="w-5 h-5 text-[#0066FF]" />
+                  <User className="w-5 h-5 text-[#800020]" />
                   Filmmaker Information
                 </CardTitle>
               </CardHeader>
@@ -267,7 +267,7 @@ export default function RentalHouseLeadDetail() {
               <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-[#0066FF]" />
+                    <FileText className="w-5 h-5 text-[#800020]" />
                     Project Requirements
                   </CardTitle>
                 </CardHeader>
@@ -317,7 +317,7 @@ export default function RentalHouseLeadDetail() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-white flex items-center gap-2">
-                    <Package className="w-5 h-5 text-[#0066FF]" />
+                    <Package className="w-5 h-5 text-[#800020]" />
                     Quote Items
                   </CardTitle>
                   <Button
@@ -325,7 +325,7 @@ export default function RentalHouseLeadDetail() {
                     disabled={saving}
                     variant="ghost"
                     size="sm"
-                    className="text-[#0066FF] hover:bg-[#0066FF]/10"
+                    className="text-[#800020] hover:bg-[#800020]/10"
                     data-testid="save-changes-button"
                   >
                     <Save className="w-4 h-4 mr-1" />
@@ -387,7 +387,7 @@ export default function RentalHouseLeadDetail() {
                         </div>
                         <div>
                           <Label className="text-xs text-[#666666] mb-1 block">Subtotal</Label>
-                          <div className="text-[#0066FF] font-semibold text-lg">
+                          <div className="text-[#800020] font-semibold text-lg">
                             ${item.subtotal.toFixed(2)}
                           </div>
                         </div>
@@ -402,7 +402,7 @@ export default function RentalHouseLeadDetail() {
           {/* Right Column - Quote Preview & Actions */}
           <div className="space-y-6">
             {/* Quote Preview */}
-            <Card className="bg-gradient-to-br from-[#0066FF]/10 to-[#0066FF]/5 border-[#0066FF]/30">
+            <Card className="bg-gradient-to-br from-[#800020]/10 to-[#800020]/5 border-[#800020]/30">
               <CardHeader>
                 <CardTitle className="text-white">Quote Summary</CardTitle>
               </CardHeader>
@@ -427,7 +427,7 @@ export default function RentalHouseLeadDetail() {
                     <div className="border-t border-[#333333] pt-4 mt-4">
                       <div className="flex justify-between items-center">
                         <span className="text-white font-semibold text-lg">Total</span>
-                        <span className="text-[#0066FF] font-bold text-2xl">
+                        <span className="text-[#800020] font-bold text-2xl">
                           ${calculateTotal().toFixed(2)}
                           <span className="text-sm text-[#666666]">/day</span>
                         </span>
@@ -462,7 +462,7 @@ export default function RentalHouseLeadDetail() {
                     <Button
                       onClick={handleSendQuote}
                       disabled={sending || quoteItems.length === 0}
-                      className="w-full bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_0_15px_rgba(0,102,255,0.3)]"
+                      className="w-full bg-[#800020] hover:bg-[#5C0A1F] text-white shadow-[0_0_15px_rgba(128,0,32,0.3)]"
                       data-testid="send-quote-button"
                     >
                       {sending ? (

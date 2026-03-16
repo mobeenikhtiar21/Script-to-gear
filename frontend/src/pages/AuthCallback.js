@@ -58,7 +58,7 @@ export default function AuthCallback() {
   
   return (
     <div className="min-h-screen bg-[#121212] flex items-center justify-center">
-      <div className="text-[#0066FF] text-lg" data-testid="auth-processing">Processing authentication...</div>
+      <div className="text-[#800020] text-lg" data-testid="auth-processing">Processing authentication...</div>
     </div>
   );
 }

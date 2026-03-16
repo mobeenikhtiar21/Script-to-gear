@@ -52,7 +52,7 @@ export default function Leads() {
     return (
       <FilmmakerLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </FilmmakerLayout>
     );
@@ -121,7 +121,7 @@ export default function Leads() {
               </p>
               <Button
                 onClick={() => navigate('/filmmaker/browse-gear')}
-                className="bg-[#0066FF] hover:bg-[#0052CC]"
+                className="bg-[#800020] hover:bg-[#5C0A1F]"
                 data-testid="browse-gear-button"
               >
                 Browse Gear
@@ -139,7 +139,7 @@ export default function Leads() {
               return (
                 <Card
                   key={lead.lead_id}
-                  className={`bg-[#1A1A1A] border-[#333333] hover:border-[#0066FF]/50 cursor-pointer transition-all ${
+                  className={`bg-[#1A1A1A] border-[#333333] hover:border-[#800020]/50 cursor-pointer transition-all ${
                     lead.status === 'quoted' ? 'ring-1 ring-yellow-900/50' : ''
                   }`}
                   onClick={() => navigate(`/filmmaker/leads/${lead.lead_id}`)}
@@ -171,7 +171,7 @@ export default function Leads() {
                         <div className="flex items-center gap-4 mt-3 text-sm text-[#A1A1A1]">
                           <span>Requested {new Date(lead.created_at).toLocaleDateString()}</span>
                           {quote && lead.status === 'quoted' && (
-                            <span className="text-[#0066FF] font-semibold">
+                            <span className="text-[#800020] font-semibold">
                               ${quote.total_amount?.toFixed(2)}/day
                             </span>
                           )}

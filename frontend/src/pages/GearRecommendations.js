@@ -194,7 +194,7 @@ export default function GearRecommendations() {
     return (
       <FilmmakerLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading gear recommendations...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading gear recommendations...</div>
         </div>
       </FilmmakerLayout>
     );
@@ -230,10 +230,10 @@ export default function GearRecommendations() {
         </div>
         
         {/* Summary Card */}
-        <Card className="bg-gradient-to-br from-[#0066FF]/10 to-[#0066FF]/5 border-[#0066FF]/30 mb-8">
+        <Card className="bg-gradient-to-br from-[#800020]/10 to-[#800020]/5 border-[#800020]/30 mb-8">
           <CardContent className="p-6">
             <div className="flex items-center gap-2 text-white mb-4">
-              <CheckCircle className="w-5 h-5 text-[#0066FF]" />
+              <CheckCircle className="w-5 h-5 text-[#800020]" />
               <span className="font-semibold">Analysis Complete</span>
             </div>
             <div className="text-[#A1A1A1] text-sm">
@@ -255,7 +255,7 @@ export default function GearRecommendations() {
                 <TabsTrigger
                   key={cat}
                   value={cat}
-                  className="data-[state=active]:bg-[#0066FF] data-[state=active]:text-white text-[#A1A1A1] capitalize"
+                  className="data-[state=active]:bg-[#800020] data-[state=active]:text-white text-[#A1A1A1] capitalize"
                   data-testid={`tab-${cat}`}
                 >
                   <Icon className="w-4 h-4 mr-2" />
@@ -289,8 +289,8 @@ export default function GearRecommendations() {
                     return (
                       <Card
                         key={item.gear_id}
-                        className={`bg-[#0F0F0F] border-[#2A2A2A] transition-all hover:border-[#0066FF]/50 ${
-                          isSelected ? 'border-[#0066FF] shadow-[0_0_20px_rgba(0,102,255,0.2)]' : ''
+                        className={`bg-[#0F0F0F] border-[#2A2A2A] transition-all hover:border-[#800020]/50 ${
+                          isSelected ? 'border-[#800020] shadow-[0_0_20px_rgba(128,0,32,0.2)]' : ''
                         }`}
                         data-testid={`gear-card-${item.gear_id}`}
                       >
@@ -303,7 +303,7 @@ export default function GearRecommendations() {
                             <Checkbox
                               checked={isSelected}
                               onCheckedChange={() => toggleGearSelection(item)}
-                              className="border-[#333333] data-[state=checked]:bg-[#0066FF] data-[state=checked]:border-[#0066FF]"
+                              className="border-[#333333] data-[state=checked]:bg-[#800020] data-[state=checked]:border-[#800020]"
                               data-testid={`checkbox-${item.gear_id}`}
                             />
                           </div>
@@ -340,7 +340,7 @@ export default function GearRecommendations() {
                           </div>
                           
                           {/* Daily Rate */}
-                          <div className="text-2xl font-bold text-[#0066FF]">
+                          <div className="text-2xl font-bold text-[#800020]">
                             ${item.daily_rate.toFixed(2)}<span className="text-sm text-[#666666]">/day</span>
                           </div>
                         </CardContent>
@@ -380,7 +380,7 @@ export default function GearRecommendations() {
                 <Button
                   onClick={handleGetQuote}
                   disabled={saving}
-                  className="bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_0_20px_rgba(0,102,255,0.3)]"
+                  className="bg-[#800020] hover:bg-[#5C0A1F] text-white shadow-[0_0_20px_rgba(128,0,32,0.3)]"
                   data-testid="get-quote-button"
                 >
                   <ShoppingCart className="w-4 h-4 mr-2" />

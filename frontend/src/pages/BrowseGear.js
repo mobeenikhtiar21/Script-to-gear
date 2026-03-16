@@ -32,7 +32,7 @@ export default function BrowseGear() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#121212] flex items-center justify-center">
-        <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+        <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
       </div>
     );
   }
@@ -72,7 +72,7 @@ export default function BrowseGear() {
                   <div className="text-sm text-[#A1A1A1]">{item.category}</div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-[#0066FF] mb-2">
+                  <div className="text-2xl font-bold text-[#800020] mb-2">
                     ${item.daily_rate}/day
                   </div>
                 </CardContent>

@@ -61,7 +61,7 @@ export default function PaymentsSetup() {
     return (
       <RentalHouseLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </RentalHouseLayout>
     );
@@ -111,7 +111,7 @@ export default function PaymentsSetup() {
           <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <CreditCard className="w-6 h-6 text-[#0066FF]" />
+                <CreditCard className="w-6 h-6 text-[#800020]" />
                 Connect Stripe Account
               </CardTitle>
               <CardDescription className="text-[#A1A1A1]">
@@ -132,15 +132,15 @@ export default function PaymentsSetup() {
                 <h4 className="text-white font-semibold">What you'll need:</h4>
                 <ul className="space-y-2 text-[#A1A1A1] text-sm">
                   <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#0066FF] rounded-full mt-1.5 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 bg-[#800020] rounded-full mt-1.5 flex-shrink-0" />
                     <span>Business information and tax ID</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#0066FF] rounded-full mt-1.5 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 bg-[#800020] rounded-full mt-1.5 flex-shrink-0" />
                     <span>Bank account details for payouts</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#0066FF] rounded-full mt-1.5 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 bg-[#800020] rounded-full mt-1.5 flex-shrink-0" />
                     <span>ID verification (driver's license or passport)</span>
                   </li>
                 </ul>
@@ -161,7 +161,7 @@ export default function PaymentsSetup() {
               <Button
                 onClick={handleConnect}
                 disabled={connecting}
-                className="w-full bg-[#0066FF] hover:bg-[#0052CC] text-white py-6 text-lg shadow-[0_0_20px_rgba(0,102,255,0.3)]"
+                className="w-full bg-[#800020] hover:bg-[#5C0A1F] text-white py-6 text-lg shadow-[0_0_20px_rgba(128,0,32,0.3)]"
                 data-testid="connect-stripe-button"
               >
                 {connecting ? (

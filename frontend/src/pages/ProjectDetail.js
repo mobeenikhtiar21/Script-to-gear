@@ -62,7 +62,7 @@ export default function ProjectDetail() {
     return (
       <FilmmakerLayout>
         <div className="flex items-center justify-center h-screen">
-          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+          <div className="text-[#800020]" data-testid="loading-spinner">Loading...</div>
         </div>
       </FilmmakerLayout>
     );
@@ -115,7 +115,7 @@ export default function ProjectDetail() {
                 <Button
                   onClick={handleRetry}
                   disabled={retrying}
-                  className="bg-[#0066FF] hover:bg-[#0052CC] text-white"
+                  className="bg-[#800020] hover:bg-[#5C0A1F] text-white"
                   data-testid="retry-button"
                 >
                   {retrying ? 'Retrying...' : 'Retry Analysis'}
@@ -132,7 +132,7 @@ export default function ProjectDetail() {
                 <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                   <CardHeader>
                     <CardTitle className="text-white text-sm flex items-center gap-2">
-                      <Camera className="w-4 h-4 text-[#0066FF]" />
+                      <Camera className="w-4 h-4 text-[#800020]" />
                       Scene Types
                     </CardTitle>
                   </CardHeader>
@@ -157,7 +157,7 @@ export default function ProjectDetail() {
                 <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                   <CardHeader>
                     <CardTitle className="text-white text-sm flex items-center gap-2">
-                      <Sun className="w-4 h-4 text-[#0066FF]" />
+                      <Sun className="w-4 h-4 text-[#800020]" />
                       Lighting Needs
                     </CardTitle>
                   </CardHeader>
@@ -182,7 +182,7 @@ export default function ProjectDetail() {
                 <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                   <CardHeader>
                     <CardTitle className="text-white text-sm flex items-center gap-2">
-                      <Mic className="w-4 h-4 text-[#0066FF]" />
+                      <Mic className="w-4 h-4 text-[#800020]" />
                       Audio Needs
                     </CardTitle>
                   </CardHeader>
@@ -207,7 +207,7 @@ export default function ProjectDetail() {
                 <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                   <CardHeader>
                     <CardTitle className="text-white text-sm flex items-center gap-2">
-                      <Video className="w-4 h-4 text-[#0066FF]" />
+                      <Video className="w-4 h-4 text-[#800020]" />
                       Camera Movement
                     </CardTitle>
                   </CardHeader>
@@ -232,7 +232,7 @@ export default function ProjectDetail() {
                 <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                   <CardHeader>
                     <CardTitle className="text-white text-sm flex items-center gap-2">
-                      <Wrench className="w-4 h-4 text-[#0066FF]" />
+                      <Wrench className="w-4 h-4 text-[#800020]" />
                       Special Requirements
                     </CardTitle>
                   </CardHeader>
@@ -258,7 +258,7 @@ export default function ProjectDetail() {
               <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
-                    <Package className="w-5 h-5 text-[#0066FF]" />
+                    <Package className="w-5 h-5 text-[#800020]" />
                     Recommended Gear
                   </CardTitle>
                   <CardDescription className="text-[#666666]">
@@ -279,7 +279,7 @@ export default function ProjectDetail() {
                       return (
                         <div
                           key={idx}
-                          className="bg-[#121212] border border-[#333333] rounded-lg p-4 hover:border-[#0066FF]/30 transition-colors"
+                          className="bg-[#121212] border border-[#333333] rounded-lg p-4 hover:border-[#800020]/30 transition-colors"
                           data-testid={`gear-${idx}`}
                         >
                           <div className="flex items-start justify-between mb-2">
@@ -293,7 +293,7 @@ export default function ProjectDetail() {
                               <p className="text-sm text-[#A1A1A1]">{gear.rationale}</p>
                             </div>
                             <div className="ml-4 text-right flex-shrink-0">
-                              <div className="text-[#0066FF] font-semibold text-sm">Qty: {gear.quantity}</div>
+                              <div className="text-[#800020] font-semibold text-sm">Qty: {gear.quantity}</div>
                             </div>
                           </div>
                         </div>
@@ -317,16 +317,16 @@ export default function ProjectDetail() {
             )}
             
             {/* Next Steps */}
-            <Card className="bg-gradient-to-br from-[#0066FF]/10 to-[#0066FF]/5 border-[#0066FF]/30">
+            <Card className="bg-gradient-to-br from-[#800020]/10 to-[#800020]/5 border-[#800020]/30">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-[#0066FF]" />
+                  <CheckCircle2 className="w-5 h-5 text-[#800020]" />
                   Next Steps
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-[#0066FF] text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
+                  <div className="w-6 h-6 bg-[#800020] text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
                     1
                   </div>
                   <div>
@@ -335,7 +335,7 @@ export default function ProjectDetail() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-[#0066FF] text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
+                  <div className="w-6 h-6 bg-[#800020] text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
                     2
                   </div>
                   <div>
@@ -344,7 +344,7 @@ export default function ProjectDetail() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-[#0066FF] text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
+                  <div className="w-6 h-6 bg-[#800020] text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
                     3
                   </div>
                   <div>
@@ -355,7 +355,7 @@ export default function ProjectDetail() {
                 
                 <Button
                   onClick={() => navigate(`/filmmaker/projects/${projectId}/gear`)}
-                  className="bg-[#0066FF] hover:bg-[#0052CC] text-white mt-4 w-full"
+                  className="bg-[#800020] hover:bg-[#5C0A1F] text-white mt-4 w-full"
                   data-testid="browse-gear-cta"
                 >
                   Browse Recommended Gear

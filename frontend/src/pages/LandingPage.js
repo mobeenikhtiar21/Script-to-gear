@@ -34,9 +34,9 @@ export default function LandingPage() {
             </div>
             
             {/* Badge */}
-            <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-[#0066FF]/10 border border-[#0066FF]/30 rounded-sm">
-              <Sparkles className="w-4 h-4 text-[#0066FF]" />
-              <span className="text-sm text-[#0066FF] font-mono uppercase tracking-wider">AI-Powered Gear Matching</span>
+            <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-[#800020]/10 border border-[#800020]/30 rounded-sm">
+              <Sparkles className="w-4 h-4 text-[#800020]" />
+              <span className="text-sm text-[#800020] font-mono uppercase tracking-wider">AI-Powered Gear Matching</span>
             </div>
             
             {/* Title */}
@@ -53,7 +53,7 @@ export default function LandingPage() {
             <Button
               onClick={handleSignIn}
               size="lg"
-              className="bg-[#0066FF] hover:bg-[#0052CC] text-white text-base px-8 py-6 shadow-[0_0_30px_rgba(0,102,255,0.4)] transition-all hover:shadow-[0_0_40px_rgba(0,102,255,0.6)] rounded-sm font-medium tracking-wide"
+              className="bg-[#800020] hover:bg-[#5C0A1F] text-white text-base px-8 py-6 shadow-[0_0_30px_rgba(128,0,32,0.4)] transition-all hover:shadow-[0_0_40px_rgba(128,0,32,0.6)] rounded-sm font-medium tracking-wide"
               data-testid="sign-in-button"
             >
               Get Started
@@ -76,9 +76,9 @@ export default function LandingPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Feature 1 */}
-          <div className="bg-[#0A0A0A] border border-[#2A2A2A] p-8 hover:border-[#0066FF]/50 transition-all group">
-            <div className="w-12 h-12 bg-[#0066FF]/10 border border-[#0066FF]/30 flex items-center justify-center mb-6 group-hover:bg-[#0066FF]/20 transition-colors">
-              <Sparkles className="w-6 h-6 text-[#0066FF]" />
+          <div className="bg-[#0A0A0A] border border-[#2A2A2A] p-8 hover:border-[#800020]/50 transition-all group">
+            <div className="w-12 h-12 bg-[#800020]/10 border border-[#800020]/30 flex items-center justify-center mb-6 group-hover:bg-[#800020]/20 transition-colors">
+              <Sparkles className="w-6 h-6 text-[#800020]" />
             </div>
             <h3 className="text-lg font-semibold text-white mb-3 uppercase tracking-wide">AI Script Analysis</h3>
             <p className="text-[#808080] text-sm leading-relaxed">
@@ -87,9 +87,9 @@ export default function LandingPage() {
           </div>
           
           {/* Feature 2 */}
-          <div className="bg-[#0A0A0A] border border-[#2A2A2A] p-8 hover:border-[#0066FF]/50 transition-all group">
-            <div className="w-12 h-12 bg-[#0066FF]/10 border border-[#0066FF]/30 flex items-center justify-center mb-6 group-hover:bg-[#0066FF]/20 transition-colors">
-              <Zap className="w-6 h-6 text-[#0066FF]" />
+          <div className="bg-[#0A0A0A] border border-[#2A2A2A] p-8 hover:border-[#800020]/50 transition-all group">
+            <div className="w-12 h-12 bg-[#800020]/10 border border-[#800020]/30 flex items-center justify-center mb-6 group-hover:bg-[#800020]/20 transition-colors">
+              <Zap className="w-6 h-6 text-[#800020]" />
             </div>
             <h3 className="text-lg font-semibold text-white mb-3 uppercase tracking-wide">Instant Quotes</h3>
             <p className="text-[#808080] text-sm leading-relaxed">
@@ -98,9 +98,9 @@ export default function LandingPage() {
           </div>
           
           {/* Feature 3 */}
-          <div className="bg-[#0A0A0A] border border-[#2A2A2A] p-8 hover:border-[#0066FF]/50 transition-all group">
-            <div className="w-12 h-12 bg-[#0066FF]/10 border border-[#0066FF]/30 flex items-center justify-center mb-6 group-hover:bg-[#0066FF]/20 transition-colors">
-              <Shield className="w-6 h-6 text-[#0066FF]" />
+          <div className="bg-[#0A0A0A] border border-[#2A2A2A] p-8 hover:border-[#800020]/50 transition-all group">
+            <div className="w-12 h-12 bg-[#800020]/10 border border-[#800020]/30 flex items-center justify-center mb-6 group-hover:bg-[#800020]/20 transition-colors">
+              <Shield className="w-6 h-6 text-[#800020]" />
             </div>
             <h3 className="text-lg font-semibold text-white mb-3 uppercase tracking-wide">Secure Payments</h3>
             <p className="text-[#808080] text-sm leading-relaxed">
@@ -122,7 +122,7 @@ export default function LandingPage() {
           <Button
             onClick={handleSignIn}
             size="lg"
-            className="bg-[#0066FF] hover:bg-[#0052CC] text-white px-8 py-6 shadow-[0_0_30px_rgba(0,102,255,0.4)] rounded-sm font-medium"
+            className="bg-[#800020] hover:bg-[#5C0A1F] text-white px-8 py-6 shadow-[0_0_30px_rgba(128,0,32,0.4)] rounded-sm font-medium"
             data-testid="cta-sign-in-button"
           >
             Get Started Now

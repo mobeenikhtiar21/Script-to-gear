@@ -22,7 +22,7 @@ export default function PaymentSuccess() {
           </p>
           <Button
             onClick={() => navigate('/filmmaker/dashboard')}
-            className="bg-[#0066FF] hover:bg-[#0052CC] w-full"
+            className="bg-[#800020] hover:bg-[#5C0A1F] w-full"
             data-testid="return-dashboard-button"
           >
             Return to Dashboard
