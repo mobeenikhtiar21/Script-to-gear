@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Film, Sparkles, Zap, Shield } from 'lucide-react';
+import { Sparkles, Zap, Shield, ArrowRight } from 'lucide-react';
 
 export default function LandingPage() {
   const handleSignIn = () => {
@@ -9,100 +9,135 @@ export default function LandingPage() {
   };
   
   return (
-    <div className="min-h-screen bg-[#121212]">
+    <div className="min-h-screen bg-[#000000]">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
-        {/* Background Image with Overlay */}
+        {/* Technical grid background */}
         <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1519800342810-b72ef13bbd46?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwzfHxjaW5lbWF0aWMlMjBmaWxtJTIwY2FtZXJhJTIwZ2VhciUyMGFycmklMjBhbGV4YSUyMHJlZCUyMGtvbW9kbyUyMGZpbG0lMjBzZXQlMjBiZWhpbmQlMjB0aGUlMjBzY2VuZXN8ZW58MHx8fHwxNzczNjg3MjM0fDA&ixlib=rb-4.1.0&q=85"
-            alt="Cinema equipment"
-            className="w-full h-full object-cover opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#121212]" />
+          <div className="absolute inset-0 bg-grid-pattern opacity-30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#000000]" />
+          {/* Subtle red accent glow from logo style */}
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-red-500/5 rounded-full blur-3xl" />
         </div>
         
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
           <div className="text-center">
-            <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-[#0066FF]/10 border border-[#0066FF]/30 rounded-full">
-              <Sparkles className="w-4 h-4 text-[#0066FF]" />
-              <span className="text-sm text-[#0066FF] font-medium">AI-Powered Gear Matching</span>
+            {/* Logo */}
+            <div className="mb-8 flex justify-center">
+              <img 
+                src="/logo.png" 
+                alt="Script-to-Gear" 
+                className="w-32 h-32 md:w-40 md:h-40 rounded-2xl shadow-2xl"
+                data-testid="landing-logo"
+              />
             </div>
             
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-none mb-6">
-              Script-to-Gear
+            {/* Badge */}
+            <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-[#0066FF]/10 border border-[#0066FF]/30 rounded-sm">
+              <Sparkles className="w-4 h-4 text-[#0066FF]" />
+              <span className="text-sm text-[#0066FF] font-mono uppercase tracking-wider">AI-Powered Gear Matching</span>
+            </div>
+            
+            {/* Title */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-none mb-6 uppercase">
+              Script<span className="text-[#808080]">-to-</span>Gear
             </h1>
             
-            <p className="text-xl md:text-2xl text-[#A1A1A1] max-w-3xl mx-auto mb-8">
+            {/* Subtitle */}
+            <p className="text-lg md:text-xl text-[#808080] max-w-2xl mx-auto mb-10 leading-relaxed">
               Transform your script into a complete gear package. AI-powered marketplace connecting filmmakers with professional rental houses.
             </p>
             
+            {/* CTA Button */}
             <Button
               onClick={handleSignIn}
               size="lg"
-              className="bg-[#0066FF] hover:bg-[#0052CC] text-white text-lg px-8 py-6 shadow-[0_0_30px_rgba(0,102,255,0.4)] transition-all hover:shadow-[0_0_40px_rgba(0,102,255,0.6)]"
+              className="bg-[#0066FF] hover:bg-[#0052CC] text-white text-base px-8 py-6 shadow-[0_0_30px_rgba(0,102,255,0.4)] transition-all hover:shadow-[0_0_40px_rgba(0,102,255,0.6)] rounded-sm font-medium tracking-wide"
               data-testid="sign-in-button"
             >
-              <Film className="w-5 h-5 mr-2" />
-              Sign in with Google
+              Get Started
+              <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
+            
+            {/* Tech specs style text */}
+            <div className="mt-8 flex justify-center gap-6 text-xs text-[#666666] font-mono uppercase tracking-wider">
+              <span>Filmmakers</span>
+              <span className="text-[#2A2A2A]">|</span>
+              <span>Rental Houses</span>
+              <span className="text-[#2A2A2A]">|</span>
+              <span>AI Analysis</span>
+            </div>
           </div>
         </div>
       </div>
       
       {/* Features Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-[#1A1A1A] border border-[#333333] rounded-lg p-8 hover:border-[#0066FF]/50 transition-all group">
-            <div className="w-12 h-12 bg-[#0066FF]/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-[#0066FF]/20 transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Feature 1 */}
+          <div className="bg-[#0A0A0A] border border-[#2A2A2A] p-8 hover:border-[#0066FF]/50 transition-all group">
+            <div className="w-12 h-12 bg-[#0066FF]/10 border border-[#0066FF]/30 flex items-center justify-center mb-6 group-hover:bg-[#0066FF]/20 transition-colors">
               <Sparkles className="w-6 h-6 text-[#0066FF]" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-3">AI Script Analysis</h3>
-            <p className="text-[#A1A1A1] leading-relaxed">
+            <h3 className="text-lg font-semibold text-white mb-3 uppercase tracking-wide">AI Script Analysis</h3>
+            <p className="text-[#808080] text-sm leading-relaxed">
               Paste your script and let AI analyze scenes to recommend the exact gear you need—from cameras to lighting.
             </p>
           </div>
           
-          <div className="bg-[#1A1A1A] border border-[#333333] rounded-lg p-8 hover:border-[#0066FF]/50 transition-all group">
-            <div className="w-12 h-12 bg-[#0066FF]/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-[#0066FF]/20 transition-colors">
+          {/* Feature 2 */}
+          <div className="bg-[#0A0A0A] border border-[#2A2A2A] p-8 hover:border-[#0066FF]/50 transition-all group">
+            <div className="w-12 h-12 bg-[#0066FF]/10 border border-[#0066FF]/30 flex items-center justify-center mb-6 group-hover:bg-[#0066FF]/20 transition-colors">
               <Zap className="w-6 h-6 text-[#0066FF]" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-3">Instant Quotes</h3>
-            <p className="text-[#A1A1A1] leading-relaxed">
+            <h3 className="text-lg font-semibold text-white mb-3 uppercase tracking-wide">Instant Quotes</h3>
+            <p className="text-[#808080] text-sm leading-relaxed">
               Build your package, select a rental house, and get custom quotes with adjusted pricing and availability.
             </p>
           </div>
           
-          <div className="bg-[#1A1A1A] border border-[#333333] rounded-lg p-8 hover:border-[#0066FF]/50 transition-all group">
-            <div className="w-12 h-12 bg-[#0066FF]/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-[#0066FF]/20 transition-colors">
+          {/* Feature 3 */}
+          <div className="bg-[#0A0A0A] border border-[#2A2A2A] p-8 hover:border-[#0066FF]/50 transition-all group">
+            <div className="w-12 h-12 bg-[#0066FF]/10 border border-[#0066FF]/30 flex items-center justify-center mb-6 group-hover:bg-[#0066FF]/20 transition-colors">
               <Shield className="w-6 h-6 text-[#0066FF]" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-3">Secure Payments</h3>
-            <p className="text-[#A1A1A1] leading-relaxed">
+            <h3 className="text-lg font-semibold text-white mb-3 uppercase tracking-wide">Secure Payments</h3>
+            <p className="text-[#808080] text-sm leading-relaxed">
               Accept quotes and pay seamlessly through Stripe. Rental houses receive payouts with transparent platform fees.
             </p>
           </div>
         </div>
       </div>
       
-      {/* CTA Section */}
-      <div className="bg-gradient-to-b from-transparent to-[#0066FF]/5 py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to transform your production workflow?
+      {/* Bottom CTA Section */}
+      <div className="border-t border-[#2A2A2A]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 uppercase tracking-wide">
+            Ready to transform your workflow?
           </h2>
-          <p className="text-lg text-[#A1A1A1] mb-8">
+          <p className="text-[#808080] mb-8 font-mono text-sm">
             Join filmmakers and rental houses using AI-powered gear matching
           </p>
           <Button
             onClick={handleSignIn}
             size="lg"
-            className="bg-[#0066FF] hover:bg-[#0052CC] text-white px-8 py-6 shadow-[0_0_30px_rgba(0,102,255,0.4)]"
+            className="bg-[#0066FF] hover:bg-[#0052CC] text-white px-8 py-6 shadow-[0_0_30px_rgba(0,102,255,0.4)] rounded-sm font-medium"
             data-testid="cta-sign-in-button"
           >
             Get Started Now
+            <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
+        </div>
+      </div>
+      
+      {/* Footer */}
+      <div className="border-t border-[#2A2A2A] py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center gap-3">
+            <img src="/logo.png" alt="Script-to-Gear" className="w-6 h-6 rounded" />
+            <span className="text-[#666666] text-xs font-mono uppercase tracking-wider">Script-to-Gear © 2024</span>
+          </div>
         </div>
       </div>
     </div>

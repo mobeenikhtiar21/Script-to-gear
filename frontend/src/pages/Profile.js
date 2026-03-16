@@ -94,35 +94,35 @@ export default function Profile() {
   
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#121212] flex items-center justify-center">
-        <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+      <div className="min-h-screen bg-[#000000] flex items-center justify-center">
+        <div className="text-[#0066FF] font-mono" data-testid="loading-spinner">Loading...</div>
       </div>
     );
   }
   
   return (
-    <div className="min-h-screen bg-[#121212]">
+    <div className="min-h-screen bg-[#000000]">
       {/* Header */}
-      <div className="bg-[#0F0F0F] border-b border-[#2A2A2A]">
+      <div className="bg-[#050505] border-b border-[#2A2A2A]">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Button
             variant="ghost"
             onClick={handleBack}
-            className="text-[#A1A1A1] hover:text-white mb-4"
+            className="text-[#808080] hover:text-white mb-4"
             data-testid="back-button"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Button>
-          <h1 className="text-3xl font-bold text-white">My Profile</h1>
-          <p className="text-[#A1A1A1] mt-1">Manage your account information</p>
+          <h1 className="text-2xl font-bold text-white uppercase tracking-wide">My Profile</h1>
+          <p className="text-[#808080] mt-1 font-mono text-sm">Manage your account information</p>
         </div>
       </div>
       
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* Profile Picture & Role */}
-          <Card className="bg-[#1A1A1A] border-[#333333]">
+          <Card className="bg-[#0A0A0A] border-[#2A2A2A]">
             <CardContent className="pt-6">
               <div className="flex items-center gap-6">
                 <div className="relative">
@@ -130,10 +130,10 @@ export default function Profile() {
                     <img
                       src={user.picture}
                       alt={user.name}
-                      className="w-20 h-20 rounded-full object-cover border-2 border-[#333333]"
+                      className="w-20 h-20 rounded-lg object-cover border border-[#2A2A2A]"
                     />
                   ) : (
-                    <div className="w-20 h-20 rounded-full bg-[#0066FF]/20 flex items-center justify-center border-2 border-[#333333]">
+                    <div className="w-20 h-20 rounded-lg bg-[#0066FF]/20 flex items-center justify-center border border-[#2A2A2A]">
                       <User className="w-8 h-8 text-[#0066FF]" />
                     </div>
                   )}
@@ -141,7 +141,7 @@ export default function Profile() {
                 <div>
                   <h2 className="text-xl font-semibold text-white">{user?.name}</h2>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    <span className={`px-2.5 py-0.5 text-xs font-mono uppercase tracking-wider ${
                       user?.role === 'filmmaker' 
                         ? 'bg-blue-900/30 text-blue-400 border border-blue-900/50' 
                         : 'bg-purple-900/30 text-purple-400 border border-purple-900/50'
@@ -155,17 +155,17 @@ export default function Profile() {
           </Card>
           
           {/* Profile Form */}
-          <Card className="bg-[#1A1A1A] border-[#333333]">
+          <Card className="bg-[#0A0A0A] border-[#2A2A2A]">
             <CardHeader>
-              <CardTitle className="text-white">Account Details</CardTitle>
-              <CardDescription className="text-[#666666]">
+              <CardTitle className="text-white uppercase tracking-wide text-base">Account Details</CardTitle>
+              <CardDescription className="text-[#666666] font-mono text-sm">
                 Update your personal information
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Name */}
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-[#A1A1A1] flex items-center gap-2">
+                <Label htmlFor="name" className="text-[#808080] flex items-center gap-2 text-sm">
                   <User className="w-4 h-4" />
                   Full Name
                 </Label>
@@ -174,14 +174,14 @@ export default function Profile() {
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
                   placeholder="Your full name"
-                  className="bg-[#121212] border-[#333333] text-white focus:border-[#0066FF]"
+                  className="bg-[#050505] border-[#2A2A2A] text-white focus:border-[#0066FF]"
                   data-testid="name-input"
                 />
               </div>
               
               {/* Email (Read-only) */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[#A1A1A1] flex items-center gap-2">
+                <Label htmlFor="email" className="text-[#808080] flex items-center gap-2 text-sm">
                   <Mail className="w-4 h-4" />
                   Email Address
                 </Label>
@@ -189,15 +189,15 @@ export default function Profile() {
                   id="email"
                   value={user?.email || ''}
                   disabled
-                  className="bg-[#0F0F0F] border-[#2A2A2A] text-[#666666] cursor-not-allowed"
+                  className="bg-[#030303] border-[#1A1A1A] text-[#666666] cursor-not-allowed font-mono"
                   data-testid="email-input"
                 />
-                <p className="text-xs text-[#666666]">Email cannot be changed</p>
+                <p className="text-xs text-[#666666] font-mono">Email cannot be changed</p>
               </div>
               
               {/* Phone */}
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-[#A1A1A1] flex items-center gap-2">
+                <Label htmlFor="phone" className="text-[#808080] flex items-center gap-2 text-sm">
                   <Phone className="w-4 h-4" />
                   Phone Number
                 </Label>
@@ -206,7 +206,7 @@ export default function Profile() {
                   value={formData.phone}
                   onChange={(e) => handleChange('phone', e.target.value)}
                   placeholder="+1 (555) 123-4567"
-                  className="bg-[#121212] border-[#333333] text-white focus:border-[#0066FF]"
+                  className="bg-[#050505] border-[#2A2A2A] text-white focus:border-[#0066FF] font-mono"
                   data-testid="phone-input"
                 />
               </div>
@@ -214,7 +214,7 @@ export default function Profile() {
               {/* Company Name (Rental Houses Only) */}
               {user?.role === 'rental_house' && (
                 <div className="space-y-2">
-                  <Label htmlFor="company_name" className="text-[#A1A1A1] flex items-center gap-2">
+                  <Label htmlFor="company_name" className="text-[#808080] flex items-center gap-2 text-sm">
                     <Building2 className="w-4 h-4" />
                     Company Name
                   </Label>
@@ -223,7 +223,7 @@ export default function Profile() {
                     value={formData.company_name}
                     onChange={(e) => handleChange('company_name', e.target.value)}
                     placeholder="Your rental company name"
-                    className="bg-[#121212] border-[#333333] text-white focus:border-[#0066FF]"
+                    className="bg-[#050505] border-[#2A2A2A] text-white focus:border-[#0066FF]"
                     data-testid="company-name-input"
                   />
                 </div>
@@ -239,8 +239,8 @@ export default function Profile() {
               className={`${
                 hasChanges 
                   ? 'bg-[#0066FF] hover:bg-[#0052CC] shadow-[0_0_15px_rgba(0,102,255,0.3)]' 
-                  : 'bg-[#333333] cursor-not-allowed'
-              } text-white px-6`}
+                  : 'bg-[#2A2A2A] cursor-not-allowed'
+              } text-white px-6 rounded-sm font-medium`}
               data-testid="save-button"
             >
               {saving ? (
@@ -255,11 +255,11 @@ export default function Profile() {
           </div>
           
           {/* Account Info */}
-          <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
+          <Card className="bg-[#050505] border-[#2A2A2A]">
             <CardContent className="py-4">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-[#666666]">Member since</span>
-                <span className="text-[#A1A1A1]">
+                <span className="text-[#808080] font-mono">
                   {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
                 </span>
               </div>

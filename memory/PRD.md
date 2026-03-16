@@ -108,6 +108,15 @@ Build a production-ready full-stack marketplace application called "Script-to-Ge
   - Backend `PUT /api/users/profile` endpoint
   - Sidebar navigation links to profile
 
+- Visual Design Update (Logo Integration)
+  - Added custom logo to landing page, sidebars, and favicon
+  - Pure black (#000000) background for true dark theme
+  - Sharp, grid-based technical aesthetic
+  - Inter + JetBrains Mono typography
+  - Blue (#0066FF) accent color maintained
+  - Role selection page with logo
+  - Updated all layouts for consistent styling
+
 ---
 
 ## Upcoming Tasks (P1)

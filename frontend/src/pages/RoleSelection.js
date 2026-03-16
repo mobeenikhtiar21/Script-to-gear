@@ -54,11 +54,19 @@ export default function RoleSelection() {
   };
   
   return (
-    <div className="min-h-screen bg-[#121212] flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-[#1A1A1A] border-[#333333]" data-testid="role-selection-card">
-        <CardHeader>
-          <CardTitle className="text-2xl text-white">Select Your Role</CardTitle>
-          <CardDescription className="text-[#A1A1A1]">
+    <div className="min-h-screen bg-[#000000] flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-[#0A0A0A] border-[#2A2A2A]" data-testid="role-selection-card">
+        <CardHeader className="text-center pb-4">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <img 
+              src="/logo.png" 
+              alt="Script-to-Gear" 
+              className="w-20 h-20 rounded-xl"
+            />
+          </div>
+          <CardTitle className="text-2xl text-white uppercase tracking-wide">Select Your Role</CardTitle>
+          <CardDescription className="text-[#808080] font-mono text-sm">
             Choose how you'll use Script-to-Gear
           </CardDescription>
         </CardHeader>
@@ -68,15 +76,15 @@ export default function RoleSelection() {
               <button
                 type="button"
                 onClick={() => setRole('filmmaker')}
-                className={`w-full p-6 rounded-lg border-2 text-left transition-all ${
+                className={`w-full p-6 border text-left transition-all ${
                   role === 'filmmaker'
                     ? 'border-[#0066FF] bg-[#0066FF]/10'
-                    : 'border-[#333333] bg-[#0F0F0F] hover:border-[#444444]'
+                    : 'border-[#2A2A2A] bg-[#050505] hover:border-[#404040]'
                 }`}
                 data-testid="role-filmmaker-button"
               >
-                <div className="text-lg font-semibold text-white mb-1">Filmmaker</div>
-                <div className="text-sm text-[#A1A1A1]">
+                <div className="text-base font-semibold text-white mb-1 uppercase tracking-wide">Filmmaker</div>
+                <div className="text-sm text-[#808080]">
                   Find and rent professional cinema equipment
                 </div>
               </button>
@@ -84,15 +92,15 @@ export default function RoleSelection() {
               <button
                 type="button"
                 onClick={() => setRole('rental_house')}
-                className={`w-full p-6 rounded-lg border-2 text-left transition-all ${
+                className={`w-full p-6 border text-left transition-all ${
                   role === 'rental_house'
                     ? 'border-[#0066FF] bg-[#0066FF]/10'
-                    : 'border-[#333333] bg-[#0F0F0F] hover:border-[#444444]'
+                    : 'border-[#2A2A2A] bg-[#050505] hover:border-[#404040]'
                 }`}
                 data-testid="role-rental-house-button"
               >
-                <div className="text-lg font-semibold text-white mb-1">Rental House</div>
-                <div className="text-sm text-[#A1A1A1]">
+                <div className="text-base font-semibold text-white mb-1 uppercase tracking-wide">Rental House</div>
+                <div className="text-sm text-[#808080]">
                   List your gear and receive quote requests
                 </div>
               </button>
@@ -101,21 +109,21 @@ export default function RoleSelection() {
             {role && (
               <>
                 <div>
-                  <Label htmlFor="phone" className="text-[#A1A1A1] mb-1.5 block">Phone Number</Label>
+                  <Label htmlFor="phone" className="text-[#808080] mb-1.5 block text-sm">Phone Number</Label>
                   <Input
                     id="phone"
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+1 (555) 000-0000"
-                    className="bg-[#0F0F0F] border-[#333333] text-white"
+                    className="bg-[#050505] border-[#2A2A2A] text-white font-mono"
                     data-testid="phone-input"
                   />
                 </div>
                 
                 {role === 'rental_house' && (
                   <div>
-                    <Label htmlFor="company" className="text-[#A1A1A1] mb-1.5 block">
+                    <Label htmlFor="company" className="text-[#808080] mb-1.5 block text-sm">
                       Company Name *
                     </Label>
                     <Input
@@ -124,7 +132,7 @@ export default function RoleSelection() {
                       onChange={(e) => setCompanyName(e.target.value)}
                       placeholder="Your rental company name"
                       required
-                      className="bg-[#0F0F0F] border-[#333333] text-white"
+                      className="bg-[#050505] border-[#2A2A2A] text-white"
                       data-testid="company-name-input"
                     />
                   </div>
@@ -135,7 +143,7 @@ export default function RoleSelection() {
             <Button
               type="submit"
               disabled={!role || loading}
-              className="w-full bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_0_15px_rgba(0,102,255,0.3)]"
+              className="w-full bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_0_15px_rgba(0,102,255,0.3)] rounded-sm font-medium"
               data-testid="submit-role-button"
             >
               {loading ? 'Saving...' : 'Continue'}
