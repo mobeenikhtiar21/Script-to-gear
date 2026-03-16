@@ -306,7 +306,7 @@ async def select_role(request: Request, data: RoleSelectionRequest, authorizatio
 
 # ============= GEAR ROUTES (Rental House Only) =============
 
-@api_router.post("/gear", response_model=GearItem)
+@api_router.post("/gear", response_model=GearItem, status_code=201)
 async def create_gear(request: Request, data: GearItemCreate, authorization: Optional[str] = Header(None)):
     """Create gear item (rental house only)"""
     user = await get_current_user(request, authorization)
@@ -426,7 +426,7 @@ async def delete_gear(request: Request, gear_id: str, authorization: Optional[st
 
 # ============= PROJECT ROUTES (Filmmaker Only) =============
 
-@api_router.post("/projects", response_model=Project)
+@api_router.post("/projects", response_model=Project, status_code=201)
 async def create_project(request: Request, data: ProjectCreate, authorization: Optional[str] = Header(None)):
     """Create project with AI script analysis (filmmaker only)"""
     user = await get_current_user(request, authorization)
@@ -477,6 +477,13 @@ Only respond with valid JSON, no additional text."""
         import json
         ai_analysis_result = json.loads(ai_response)
         
+    except json.JSONDecodeError as e:
+        logging.error(f"AI response not valid JSON: {str(e)}")
+        ai_analysis_result = {
+            "error": "AI analysis format error",
+            "message": "AI returned invalid format",
+            "gear_recommendations": []
+        }
     except Exception as e:
         logging.error(f"AI analysis failed: {str(e)}")
         ai_analysis_result = {
