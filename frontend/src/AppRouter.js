@@ -7,6 +7,7 @@ import FilmmakerDashboard from './pages/FilmmakerDashboard';
 import RentalHouseDashboard from './pages/RentalHouseDashboard';
 import CreateProject from './pages/CreateProject';
 import ProjectDetail from './pages/ProjectDetail';
+import GearRecommendations from './pages/GearRecommendations';
 import SavedProjects from './pages/SavedProjects';
 import BrowseGear from './pages/BrowseGear';
 import ManageGear from './pages/ManageGear';
@@ -34,6 +35,7 @@ export default function AppRouter() {
       <Route path="/filmmaker/create-project" element={<ProtectedRoute><CreateProject /></ProtectedRoute>} />
       <Route path="/filmmaker/projects" element={<ProtectedRoute><SavedProjects /></ProtectedRoute>} />
       <Route path="/filmmaker/projects/:projectId" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
+      <Route path="/filmmaker/projects/:projectId/gear" element={<ProtectedRoute><GearRecommendations /></ProtectedRoute>} />
       <Route path="/filmmaker/browse-gear" element={<ProtectedRoute><BrowseGear /></ProtectedRoute>} />
       <Route path="/filmmaker/leads" element={<ProtectedRoute><Leads /></ProtectedRoute>} />
       <Route path="/filmmaker/leads/:leadId" element={<ProtectedRoute><LeadDetail /></ProtectedRoute>} />

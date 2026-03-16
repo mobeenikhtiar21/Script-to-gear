@@ -354,11 +354,11 @@ export default function ProjectDetail() {
                 </div>
                 
                 <Button
-                  onClick={() => navigate('/filmmaker/browse-gear')}
+                  onClick={() => navigate(`/filmmaker/projects/${projectId}/gear`)}
                   className="bg-[#0066FF] hover:bg-[#0052CC] text-white mt-4 w-full"
                   data-testid="browse-gear-cta"
                 >
-                  Browse Gear Inventory
+                  Browse Recommended Gear
                 </Button>
               </CardContent>
             </Card>
