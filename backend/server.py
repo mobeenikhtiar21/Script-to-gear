@@ -1139,6 +1139,26 @@ async def get_rental_houses(request: Request, authorization: Optional[str] = Hea
     
     return rental_houses
 
+@api_router.get("/users/{user_id}")
+async def get_user(request: Request, user_id: str, authorization: Optional[str] = Header(None)):
+    """Get user details"""
+    current_user = await get_current_user(request, authorization)
+    
+    user_doc = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Return limited info for privacy
+    return {
+        "user_id": user_doc["user_id"],
+        "name": user_doc["name"],
+        "email": user_doc["email"],
+        "phone": user_doc.get("phone"),
+        "company_name": user_doc.get("company_name"),
+        "role": user_doc["role"]
+    }
+
 # Include router
 app.include_router(api_router)
 

@@ -12,6 +12,8 @@ import SavedProjects from './pages/SavedProjects';
 import BrowseGear from './pages/BrowseGear';
 import InventoryManagement from './pages/InventoryManagement';
 import AddEditGear from './pages/AddEditGear';
+import LeadsManagement from './pages/LeadsManagement';
+import RentalHouseLeadDetail from './pages/RentalHouseLeadDetail';
 import ManageGear from './pages/ManageGear';
 import Leads from './pages/Leads';
 import LeadDetail from './pages/LeadDetail';
@@ -47,9 +49,9 @@ export default function AppRouter() {
       <Route path="/rental-house/inventory" element={<ProtectedRoute><InventoryManagement /></ProtectedRoute>} />
       <Route path="/rental-house/inventory/add" element={<ProtectedRoute><AddEditGear /></ProtectedRoute>} />
       <Route path="/rental-house/inventory/edit/:gearId" element={<ProtectedRoute><AddEditGear /></ProtectedRoute>} />
+      <Route path="/rental-house/leads" element={<ProtectedRoute><LeadsManagement /></ProtectedRoute>} />
+      <Route path="/rental-house/leads/:leadId" element={<ProtectedRoute><RentalHouseLeadDetail /></ProtectedRoute>} />
       <Route path="/rental-house/gear" element={<ProtectedRoute><ManageGear /></ProtectedRoute>} />
-      <Route path="/rental-house/leads" element={<ProtectedRoute><Leads /></ProtectedRoute>} />
-      <Route path="/rental-house/leads/:leadId" element={<ProtectedRoute><LeadDetail /></ProtectedRoute>} />
       
       {/* Shared Routes */}
       <Route path="/payment-success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
