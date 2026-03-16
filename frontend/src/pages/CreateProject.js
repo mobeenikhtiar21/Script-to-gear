@@ -2,18 +2,40 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import axios from 'axios';
+import FilmmakerLayout from '@/components/FilmmakerLayout';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Sparkles, Loader2 } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Sparkles, Loader2, Upload, Info } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function CreateProject() {
   const [scriptText, setScriptText] = useState('');
+  const [includeAudio, setIncludeAudio] = useState(true);
+  const [includeLighting, setIncludeLighting] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
   const navigate = useNavigate();
+  
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.type === 'application/pdf') {
+        toast.info('PDF parsing not yet implemented. Please paste text instead.');
+      } else if (file.type.startsWith('text/')) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setScriptText(event.target.result);
+          toast.success('Script loaded successfully');
+        };
+        reader.readAsText(file);
+      } else {
+        toast.error('Please upload a PDF or text file');
+      }
+    }
+  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,117 +54,160 @@ export default function CreateProject() {
         { withCredentials: true }
       );
       
-      toast.success('Project created! AI analysis complete.');
+      toast.success('Analysis complete!');
       navigate(`/filmmaker/projects/${response.data.project_id}`);
     } catch (error) {
       console.error('Failed to create project:', error);
-      toast.error('Failed to create project');
+      toast.error('Failed to analyze script');
     } finally {
       setAnalyzing(false);
     }
   };
   
   return (
-    <div className="min-h-screen bg-[#121212]">
-      {/* Header */}
-      <div className="bg-[#1A1A1A] border-b border-[#333333]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/filmmaker/dashboard')}
-            className="text-[#A1A1A1] hover:text-white mb-2"
-            data-testid="back-button"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
-          <h1 className="text-3xl font-bold text-white">Create New Project</h1>
-          <p className="text-[#A1A1A1] mt-2">Paste your script and let AI recommend the perfect gear</p>
+    <FilmmakerLayout>
+      <div className="p-8 max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">New Script Analysis</h1>
+          <p className="text-[#A1A1A1]">Paste your script or scene description for AI-powered gear recommendations</p>
         </div>
-      </div>
-      
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Card className="bg-[#1A1A1A] border-[#333333]">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#0066FF]" />
-              Script Analysis
-            </CardTitle>
-            <CardDescription className="text-[#A1A1A1]">
-              Our AI will analyze your script to identify scene types (day/night, indoor/outdoor, dialogue-heavy) and recommend specific camera, lens, audio, and lighting gear.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+        
+        {/* Main Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Script Input Card */}
+          <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
+            <CardHeader>
+              <CardTitle className="text-white text-lg flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-[#0066FF]" />
+                Script Input
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="script" className="text-[#A1A1A1] mb-2 block">
-                  Script Text *
-                </Label>
                 <Textarea
-                  id="script"
                   value={scriptText}
                   onChange={(e) => setScriptText(e.target.value)}
-                  placeholder="EXT. MOODY NIGHT EXTERIOR - ABANDONED WAREHOUSE\n\nThe camera pans across a rain-soaked street. Shadows dance in the flickering streetlight. Low-light conditions require fast lenses...\n\nINT. DIALOGUE-HEAVY INTERVIEW - DAY\n\nTwo characters sit across from each other, intimate conversation. Professional audio is critical..."
-                  className="bg-[#0F0F0F] border-[#333333] text-white min-h-[400px] font-mono text-sm"
+                  placeholder="Paste your script or scene description here...\n\nExample:\nEXT. MOODY NIGHT EXTERIOR - ABANDONED WAREHOUSE\n\nThe rain-soaked streets glisten under flickering streetlights. Deep shadows require low-light capable cameras...\n\nINT. DIALOGUE-HEAVY INTERVIEW - DAY\n\nTwo characters in intimate conversation. Professional audio critical for clean dialogue capture..."
+                  className="bg-[#121212] border-[#333333] text-white min-h-[400px] font-mono text-sm focus:border-[#0066FF] transition-colors"
                   required
                   data-testid="script-textarea"
                 />
-                <p className="text-xs text-[#666666] mt-2">
-                  Tip: Include scene descriptions like "moody night exterior" or "dialogue-heavy interview" for better AI recommendations.
-                </p>
               </div>
               
               <div className="flex items-center gap-4">
-                <Button
-                  type="submit"
-                  disabled={analyzing || !scriptText.trim()}
-                  className="bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_0_15px_rgba(0,102,255,0.3)]"
-                  data-testid="analyze-button"
-                >
-                  {analyzing ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Analyzing Script...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Analyze & Create Project
-                    </>
-                  )}
-                </Button>
-                
+                <input
+                  type="file"
+                  id="file-upload"
+                  accept=".txt,.pdf"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  data-testid="file-input"
+                />
                 <Button
                   type="button"
-                  variant="ghost"
-                  onClick={() => navigate('/filmmaker/dashboard')}
-                  className="text-[#A1A1A1] hover:text-white"
-                  data-testid="cancel-button"
+                  variant="outline"
+                  onClick={() => document.getElementById('file-upload').click()}
+                  className="bg-transparent border-[#333333] text-[#A1A1A1] hover:border-[#0066FF] hover:text-[#0066FF] hover:bg-[#0066FF]/5"
+                  data-testid="upload-button"
                 >
-                  Cancel
+                  <Upload className="w-4 h-4 mr-2" />
+                  Upload Script File
                 </Button>
+                <span className="text-xs text-[#666666]">Supports .txt and .pdf files</span>
               </div>
-            </form>
-          </CardContent>
-        </Card>
-        
-        {/* Example Card */}
-        <Card className="bg-[#1A1A1A] border-[#333333] mt-6">
-          <CardHeader>
-            <CardTitle className="text-white text-lg">Example Script Snippet</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="bg-[#0F0F0F] border border-[#333333] rounded-lg p-4 font-mono text-sm text-[#A1A1A1]">
-              <div className="mb-2 text-white">EXT. MOODY NIGHT EXTERIOR - ABANDONED WAREHOUSE</div>
-              <div className="mb-4">The rain-soaked streets glisten under flickering streetlights. Deep shadows require low-light capable cameras and fast lenses.</div>
+            </CardContent>
+          </Card>
+          
+          {/* Analysis Options Card */}
+          <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
+            <CardHeader>
+              <CardTitle className="text-white text-lg">Analysis Options</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between p-4 bg-[#121212] border border-[#2A2A2A] rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div>
+                    <Label htmlFor="audio-switch" className="text-white font-medium cursor-pointer">
+                      Include audio recommendations?
+                    </Label>
+                    <p className="text-sm text-[#666666] mt-1">Microphones, recorders, and audio accessories</p>
+                  </div>
+                </div>
+                <Switch
+                  id="audio-switch"
+                  checked={includeAudio}
+                  onCheckedChange={setIncludeAudio}
+                  className="data-[state=checked]:bg-[#0066FF]"
+                  data-testid="audio-toggle"
+                />
+              </div>
               
-              <div className="mb-2 text-white">INT. DIALOGUE-HEAVY INTERVIEW - DAY</div>
-              <div>Two characters in close conversation. Lavalier mics and shotgun microphones are essential for clean dialogue capture.</div>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="flex items-center justify-between p-4 bg-[#121212] border border-[#2A2A2A] rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div>
+                    <Label htmlFor="lighting-switch" className="text-white font-medium cursor-pointer">
+                      Include lighting recommendations?
+                    </Label>
+                    <p className="text-sm text-[#666666] mt-1">Lights, modifiers, and grip equipment</p>
+                  </div>
+                </div>
+                <Switch
+                  id="lighting-switch"
+                  checked={includeLighting}
+                  onCheckedChange={setIncludeLighting}
+                  className="data-[state=checked]:bg-[#0066FF]"
+                  data-testid="lighting-toggle"
+                />
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Info Card */}
+          <Card className="bg-[#0066FF]/5 border-[#0066FF]/20">
+            <CardContent className="p-4">
+              <div className="flex gap-3">
+                <Info className="w-5 h-5 text-[#0066FF] flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-[#A1A1A1]">
+                  <span className="text-white font-medium">Tip:</span> Include scene descriptions like "moody night exterior" or "dialogue-heavy interview" for more accurate AI recommendations.
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Submit Button */}
+          <div className="flex items-center gap-4 pt-4">
+            <Button
+              type="submit"
+              disabled={analyzing || !scriptText.trim()}
+              className="bg-[#0066FF] hover:bg-[#0052CC] text-white px-8 py-6 text-lg shadow-[0_0_20px_rgba(0,102,255,0.3)] hover:shadow-[0_0_30px_rgba(0,102,255,0.5)] transition-all"
+              data-testid="analyze-button"
+            >
+              {analyzing ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Analyzing Script...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Analyze with AI
+                </>
+              )}
+            </Button>
+            
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => navigate('/filmmaker/dashboard')}
+              className="text-[#A1A1A1] hover:text-white hover:bg-[#1A1A1A]"
+              data-testid="cancel-button"
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
       </div>
-    </div>
+    </FilmmakerLayout>
   );
 }

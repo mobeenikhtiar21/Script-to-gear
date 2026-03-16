@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import axios from 'axios';
+import FilmmakerLayout from '@/components/FilmmakerLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Sparkles, Package, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Package, CheckCircle2, AlertCircle } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -35,17 +36,21 @@ export default function ProjectDetail() {
   
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#121212] flex items-center justify-center">
-        <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
-      </div>
+      <FilmmakerLayout>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+        </div>
+      </FilmmakerLayout>
     );
   }
   
   if (!project) {
     return (
-      <div className="min-h-screen bg-[#121212] flex items-center justify-center">
-        <div className="text-[#A1A1A1]">Project not found</div>
-      </div>
+      <FilmmakerLayout>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-[#A1A1A1]">Project not found</div>
+        </div>
+      </FilmmakerLayout>
     );
   }
   
@@ -53,44 +58,32 @@ export default function ProjectDetail() {
   const hasError = analysis?.error;
   
   return (
-    <div className="min-h-screen bg-[#121212]">
-      {/* Header */}
-      <div className="bg-[#1A1A1A] border-b border-[#333333]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/filmmaker/dashboard')}
-            className="text-[#A1A1A1] hover:text-white mb-2"
-            data-testid="back-button"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
-          <h1 className="text-3xl font-bold text-white">Project Analysis</h1>
-          <p className="text-[#A1A1A1] mt-2">
-            {new Date(project.created_at).toLocaleDateString()}
+    <FilmmakerLayout>
+      <div className="p-8 max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Project Analysis</h1>
+          <p className="text-[#A1A1A1]">
+            Created {new Date(project.created_at).toLocaleDateString()}
           </p>
         </div>
-      </div>
-      
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Script */}
-        <Card className="bg-[#1A1A1A] border-[#333333]">
+        <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
           <CardHeader>
             <CardTitle className="text-white">Script</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="bg-[#0F0F0F] border border-[#333333] rounded-lg p-4 font-mono text-sm text-[#A1A1A1] whitespace-pre-wrap max-h-96 overflow-y-auto">
+            <div className="bg-[#121212] border border-[#333333] rounded-lg p-4 font-mono text-sm text-[#A1A1A1] whitespace-pre-wrap max-h-96 overflow-y-auto">
               {project.script_text}
             </div>
           </CardContent>
         </Card>
         
         {hasError ? (
-          <Card className="bg-[#1A1A1A] border-[#333333]">
+          <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
             <CardContent className="py-12 text-center">
-              <p className="text-[#EF4444] mb-2">AI Analysis Failed</p>
+              <AlertCircle className="w-12 h-12 text-[#EF4444] mx-auto mb-4" />
+              <p className="text-[#EF4444] mb-2 font-semibold">AI Analysis Failed</p>
               <p className="text-[#A1A1A1] text-sm">{analysis.message}</p>
             </CardContent>
           </Card>
@@ -98,13 +91,13 @@ export default function ProjectDetail() {
           <>
             {/* Scene Analysis */}
             {analysis?.scene_analysis && analysis.scene_analysis.length > 0 && (
-              <Card className="bg-[#1A1A1A] border-[#333333]">
+              <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-[#0066FF]" />
                     Scene Analysis
                   </CardTitle>
-                  <CardDescription className="text-[#A1A1A1]">
+                  <CardDescription className="text-[#666666]">
                     AI-identified scene types and requirements
                   </CardDescription>
                 </CardHeader>
@@ -113,7 +106,7 @@ export default function ProjectDetail() {
                     {analysis.scene_analysis.map((scene, idx) => (
                       <div
                         key={idx}
-                        className="bg-[#0F0F0F] border border-[#333333] rounded-lg p-4"
+                        className="bg-[#121212] border border-[#333333] rounded-lg p-4"
                         data-testid={`scene-${idx}`}
                       >
                         <div className="font-semibold text-white mb-2">{scene.scene_type}</div>
@@ -141,13 +134,13 @@ export default function ProjectDetail() {
             
             {/* Gear Recommendations */}
             {analysis?.gear_recommendations && analysis.gear_recommendations.length > 0 && (
-              <Card className="bg-[#1A1A1A] border-[#333333]">
+              <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
                     <Package className="w-5 h-5 text-[#0066FF]" />
                     Recommended Gear
                   </CardTitle>
-                  <CardDescription className="text-[#A1A1A1]">
+                  <CardDescription className="text-[#666666]">
                     AI-generated equipment list based on your script
                   </CardDescription>
                 </CardHeader>
@@ -165,7 +158,7 @@ export default function ProjectDetail() {
                       return (
                         <div
                           key={idx}
-                          className="bg-[#0F0F0F] border border-[#333333] rounded-lg p-4"
+                          className="bg-[#121212] border border-[#333333] rounded-lg p-4"
                           data-testid={`gear-recommendation-${idx}`}
                         >
                           <div className="flex items-start justify-between mb-2">
@@ -192,7 +185,7 @@ export default function ProjectDetail() {
             
             {/* Production Notes */}
             {analysis?.production_notes && (
-              <Card className="bg-[#1A1A1A] border-[#333333]">
+              <Card className="bg-[#0F0F0F] border-[#2A2A2A]">
                 <CardHeader>
                   <CardTitle className="text-white">Production Notes</CardTitle>
                 </CardHeader>
@@ -251,6 +244,6 @@ export default function ProjectDetail() {
           </>
         )}
       </div>
-    </div>
+    </FilmmakerLayout>
   );
 }
