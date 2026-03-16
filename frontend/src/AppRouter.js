@@ -10,6 +10,8 @@ import ProjectDetail from './pages/ProjectDetail';
 import GearRecommendations from './pages/GearRecommendations';
 import SavedProjects from './pages/SavedProjects';
 import BrowseGear from './pages/BrowseGear';
+import InventoryManagement from './pages/InventoryManagement';
+import AddEditGear from './pages/AddEditGear';
 import ManageGear from './pages/ManageGear';
 import Leads from './pages/Leads';
 import LeadDetail from './pages/LeadDetail';
@@ -42,6 +44,9 @@ export default function AppRouter() {
       
       {/* Rental House Routes */}
       <Route path="/rental-house/dashboard" element={<ProtectedRoute><RentalHouseDashboard /></ProtectedRoute>} />
+      <Route path="/rental-house/inventory" element={<ProtectedRoute><InventoryManagement /></ProtectedRoute>} />
+      <Route path="/rental-house/inventory/add" element={<ProtectedRoute><AddEditGear /></ProtectedRoute>} />
+      <Route path="/rental-house/inventory/edit/:gearId" element={<ProtectedRoute><AddEditGear /></ProtectedRoute>} />
       <Route path="/rental-house/gear" element={<ProtectedRoute><ManageGear /></ProtectedRoute>} />
       <Route path="/rental-house/leads" element={<ProtectedRoute><Leads /></ProtectedRoute>} />
       <Route path="/rental-house/leads/:leadId" element={<ProtectedRoute><LeadDetail /></ProtectedRoute>} />

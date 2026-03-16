@@ -2,16 +2,16 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import axios from 'axios';
+import RentalHouseLayout from '@/components/RentalHouseLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Film, Package, FileText, Plus } from 'lucide-react';
+import { Package, FileText, TrendingUp, Plus } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function RentalHouseDashboard() {
-  const [user, setUser] = useState(null);
-  const [gear, setGear] = useState([]);
-  const [leads, setLeads] = useState([]);
+  const [stats, setStats] = useState({ gearCount: 0, newLeads: 0, pendingQuotes: 0 });
+  const [recentLeads, setRecentLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   
@@ -21,15 +21,18 @@ export default function RentalHouseDashboard() {
   
   const fetchData = async () => {
     try {
-      const [userRes, gearRes, leadsRes] = await Promise.all([
-        axios.get(`${API_URL}/api/auth/me`, { withCredentials: true }),
+      const [gearRes, leadsRes] = await Promise.all([
         axios.get(`${API_URL}/api/gear`, { withCredentials: true }),
         axios.get(`${API_URL}/api/leads`, { withCredentials: true })
       ]);
       
-      setUser(userRes.data);
-      setGear(gearRes.data);
-      setLeads(leadsRes.data);
+      setStats({
+        gearCount: gearRes.data.length,
+        newLeads: leadsRes.data.filter(l => l.status === 'new').length,
+        pendingQuotes: leadsRes.data.filter(l => l.status === 'quoted').length
+      });
+      
+      setRecentLeads(leadsRes.data.slice(0, 5));
     } catch (error) {
       console.error('Failed to fetch data:', error);
       toast.error('Failed to load dashboard');
@@ -38,92 +41,70 @@ export default function RentalHouseDashboard() {
     }
   };
   
-  const handleLogout = async () => {
-    try {
-      await axios.post(`${API_URL}/api/auth/logout`, {}, { withCredentials: true });
-      navigate('/');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
-  
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#121212] flex items-center justify-center">
-        <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
-      </div>
+      <RentalHouseLayout>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-[#0066FF]" data-testid="loading-spinner">Loading...</div>
+        </div>
+      </RentalHouseLayout>
     );
   }
   
+  const statusColors = {
+    new: 'bg-blue-900/30 text-blue-400 border-blue-900/50',
+    quoted: 'bg-yellow-900/30 text-yellow-400 border-yellow-900/50',
+    accepted: 'bg-green-900/30 text-green-400 border-green-900/50',
+    declined: 'bg-red-900/30 text-red-400 border-red-900/50'
+  };
+  
   return (
-    <div className="min-h-screen bg-[#121212]">
-      {/* Header */}
-      <div className="bg-[#1A1A1A] border-b border-[#333333]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Film className="w-8 h-8 text-[#0066FF]" />
-              <div>
-                <h1 className="text-2xl font-bold text-white">Script-to-Gear</h1>
-                <p className="text-sm text-[#A1A1A1]">Rental House Dashboard</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <div className="text-sm font-medium text-white">{user?.company_name || user?.name}</div>
-                <div className="text-xs text-[#A1A1A1]">{user?.email}</div>
-              </div>
-              <Button
-                variant="ghost"
-                onClick={handleLogout}
-                className="text-[#A1A1A1] hover:text-white"
-                data-testid="logout-button"
-              >
-                Logout
-              </Button>
-            </div>
-          </div>
+    <RentalHouseLayout>
+      <div className="p-8 max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
+          <p className="text-[#A1A1A1]">Manage your inventory and quote requests</p>
         </div>
-      </div>
-      
-      {/* Stats */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-[#1A1A1A] border-[#333333]">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-[#A1A1A1]">Total Gear</p>
-                  <p className="text-3xl font-bold text-white mt-1">{gear.length}</p>
+          <Card className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 transition-colors">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-[#666666] text-sm">New Leads</div>
+                <div className="w-10 h-10 bg-blue-900/30 rounded-lg flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-blue-400" />
                 </div>
-                <Package className="w-8 h-8 text-[#0066FF]" />
               </div>
+              <div className="text-4xl font-bold text-white mb-1">{stats.newLeads}</div>
+              <div className="text-xs text-[#666666]">Awaiting your response</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-[#1A1A1A] border-[#333333]">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-[#A1A1A1]">Quote Requests</p>
-                  <p className="text-3xl font-bold text-white mt-1">{leads.length}</p>
+          <Card className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 transition-colors">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-[#666666] text-sm">Pending Quotes</div>
+                <div className="w-10 h-10 bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-yellow-400" />
                 </div>
-                <FileText className="w-8 h-8 text-[#0066FF]" />
               </div>
+              <div className="text-4xl font-bold text-white mb-1">{stats.pendingQuotes}</div>
+              <div className="text-xs text-[#666666]">Sent to filmmakers</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-[#1A1A1A] border-[#333333]">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-[#A1A1A1]">Active Quotes</p>
-                  <p className="text-3xl font-bold text-white mt-1">
-                    {leads.filter(l => l.status === 'quoted').length}
-                  </p>
+          <Card className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 transition-colors">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-[#666666] text-sm">Total Gear Items</div>
+                <div className="w-10 h-10 bg-green-900/30 rounded-lg flex items-center justify-center">
+                  <Package className="w-5 h-5 text-green-400" />
                 </div>
-                <FileText className="w-8 h-8 text-[#22C55E]" />
               </div>
+              <div className="text-4xl font-bold text-white mb-1">{stats.gearCount}</div>
+              <div className="text-xs text-[#666666]">In your inventory</div>
             </CardContent>
           </Card>
         </div>
@@ -133,14 +114,14 @@ export default function RentalHouseDashboard() {
           <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Button
-              onClick={() => navigate('/rental-house/gear')}
+              onClick={() => navigate('/rental-house/inventory')}
               className="bg-[#0066FF] hover:bg-[#0052CC] text-white p-6 h-auto justify-start shadow-[0_0_15px_rgba(0,102,255,0.3)]"
-              data-testid="manage-gear-button"
+              data-testid="manage-inventory-button"
             >
               <Plus className="w-5 h-5 mr-3" />
               <div className="text-left">
-                <div className="font-semibold">Manage Gear Inventory</div>
-                <div className="text-xs opacity-80">Add, edit, or remove gear</div>
+                <div className="font-semibold">Manage Inventory</div>
+                <div className="text-xs opacity-80">Add or update gear items</div>
               </div>
             </Button>
             
@@ -152,52 +133,53 @@ export default function RentalHouseDashboard() {
             >
               <FileText className="w-5 h-5 mr-3" />
               <div className="text-left">
-                <div className="font-semibold">View Quote Requests</div>
-                <div className="text-xs opacity-80">{leads.filter(l => l.status === 'new').length} new</div>
+                <div className="font-semibold">View Lead Requests</div>
+                <div className="text-xs opacity-80">{stats.newLeads} new</div>
               </div>
             </Button>
           </div>
         </div>
         
-        {/* Recent Gear */}
+        {/* Recent Leads */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-white">Recent Gear</h2>
+            <h2 className="text-xl font-semibold text-white">Recent Leads</h2>
             <Button
               variant="ghost"
-              onClick={() => navigate('/rental-house/gear')}
-              className="text-[#0066FF] hover:text-[#0052CC]"
+              onClick={() => navigate('/rental-house/leads')}
+              className="text-[#0066FF] hover:text-[#0052CC] hover:bg-[#0066FF]/10"
             >
               View All
             </Button>
           </div>
           
-          {gear.length === 0 ? (
-            <Card className="bg-[#1A1A1A] border-[#333333]" data-testid="no-gear-card">
+          {recentLeads.length === 0 ? (
+            <Card className="bg-[#0F0F0F] border-[#2A2A2A]" data-testid="no-leads">
               <CardContent className="py-12 text-center">
-                <Package className="w-12 h-12 text-[#666666] mx-auto mb-4" />
-                <p className="text-[#A1A1A1] mb-4">No gear added yet</p>
-                <Button
-                  onClick={() => navigate('/rental-house/gear')}
-                  className="bg-[#0066FF] hover:bg-[#0052CC]"
-                >
-                  Add Your First Gear Item
-                </Button>
+                <FileText className="w-12 h-12 text-[#333333] mx-auto mb-4" />
+                <p className="text-[#666666]">No quote requests yet</p>
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {gear.slice(0, 6).map((item) => (
-                <Card key={item.gear_id} className="bg-[#1A1A1A] border-[#333333]" data-testid={`gear-${item.gear_id}`}>
-                  <CardHeader>
-                    <CardTitle className="text-white text-lg">
-                      {item.manufacturer} {item.model}
-                    </CardTitle>
-                    <div className="text-sm text-[#A1A1A1]">{item.category}</div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-[#0066FF]">
-                      ${item.daily_rate}/day
+            <div className="space-y-3">
+              {recentLeads.map((lead) => (
+                <Card
+                  key={lead.lead_id}
+                  className="bg-[#0F0F0F] border-[#2A2A2A] hover:border-[#0066FF]/50 cursor-pointer transition-all"
+                  onClick={() => navigate(`/rental-house/leads/${lead.lead_id}`)}
+                  data-testid={`lead-${lead.lead_id}`}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="text-white font-medium mb-1">Lead #{lead.lead_id}</div>
+                        <div className="text-sm text-[#666666]">
+                          {new Date(lead.created_at).toLocaleDateString()}
+                        </div>
+                      </div>
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusColors[lead.status]}`}>
+                        {lead.status}
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
@@ -206,6 +188,6 @@ export default function RentalHouseDashboard() {
           )}
         </div>
       </div>
-    </div>
+    </RentalHouseLayout>
   );
 }
