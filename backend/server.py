@@ -11,6 +11,8 @@ from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timezone, timedelta
 import httpx
+import asyncio
+import resend
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 from emergentintegrations.payments.stripe.checkout import (
     StripeCheckout,
@@ -33,9 +35,275 @@ app = FastAPI()
 # Create API router
 api_router = APIRouter(prefix="/api")
 
+# Health check endpoint
+@api_router.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "service": "script-to-gear-api"}
+
 # Get environment variables
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
 STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY')
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY', 're_test_key')
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'noreply@scripttogear.com')
+APP_URL = os.environ.get('APP_URL', 'https://filmmaker-rental.preview.emergentagent.com')
+
+# Initialize Resend
+resend.api_key = RESEND_API_KEY
+
+# ============= EMAIL NOTIFICATION HELPERS =============
+
+async def send_email_async(to_email: str, subject: str, html_content: str):
+    """Send email using Resend (non-blocking)"""
+    try:
+        params = {
+            "from": SENDER_EMAIL,
+            "to": [to_email],
+            "subject": subject,
+            "html": html_content
+        }
+        
+        # Run sync SDK in thread to keep FastAPI non-blocking
+        email = await asyncio.to_thread(resend.Emails.send, params)
+        
+        # Log email send
+        await db.email_logs.insert_one({
+            "email_id": email.get("id"),
+            "recipient": to_email,
+            "subject": subject,
+            "status": "sent",
+            "sent_at": datetime.now(timezone.utc).isoformat()
+        })
+        
+        logging.info(f"Email sent to {to_email}: {subject}")
+        return email
+    except Exception as e:
+        logging.error(f"Failed to send email to {to_email}: {str(e)}")
+        
+        # Log email failure
+        await db.email_logs.insert_one({
+            "recipient": to_email,
+            "subject": subject,
+            "status": "failed",
+            "error": str(e),
+            "sent_at": datetime.now(timezone.utc).isoformat()
+        })
+        
+        # Don't raise exception - email failures shouldn't break main flow
+        return None
+
+def get_email_template_welcome_filmmaker(user_name: str):
+    """Welcome email template for filmmakers"""
+    return f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #0066FF; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="color: white; margin: 0;">Welcome to Script-to-Gear!</h1>
+            </div>
+            <div style="background-color: #f5f5f5; padding: 30px; border-radius: 0 0 8px 8px;">
+                <p style="color: #333; font-size: 16px;">Hi {user_name},</p>
+                <p style="color: #333; font-size: 16px;">
+                    Welcome to Script-to-Gear, the AI-powered marketplace connecting filmmakers with professional rental houses.
+                </p>
+                <p style="color: #333; font-size: 16px;">
+                    <strong>Get started in 3 easy steps:</strong>
+                </p>
+                <ol style="color: #333; font-size: 14px; line-height: 1.8;">
+                    <li>Create your first project and paste your script</li>
+                    <li>Get AI-powered gear recommendations</li>
+                    <li>Request quotes from rental houses</li>
+                </ol>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="{APP_URL}/filmmaker/create-project" 
+                       style="background-color: #0066FF; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                        Start Your First Analysis
+                    </a>
+                </div>
+                <p style="color: #666; font-size: 12px; margin-top: 30px;">
+                    Questions? Reply to this email and we'll help you get started.
+                </p>
+            </div>
+        </body>
+    </html>
+    """
+
+def get_email_template_welcome_rental_house(user_name: str, company_name: str):
+    """Welcome email template for rental houses"""
+    return f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #0066FF; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="color: white; margin: 0;">Welcome to Script-to-Gear!</h1>
+            </div>
+            <div style="background-color: #f5f5f5; padding: 30px; border-radius: 0 0 8px 8px;">
+                <p style="color: #333; font-size: 16px;">Hi {user_name},</p>
+                <p style="color: #333; font-size: 16px;">
+                    Welcome to Script-to-Gear! We're excited to have {company_name} join our marketplace.
+                </p>
+                <p style="color: #333; font-size: 16px;">
+                    <strong>Get started:</strong>
+                </p>
+                <ol style="color: #333; font-size: 14px; line-height: 1.8;">
+                    <li>Add your gear inventory</li>
+                    <li>Connect Stripe to receive payments</li>
+                    <li>Respond to quote requests from filmmakers</li>
+                </ol>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="{APP_URL}/rental-house/inventory" 
+                       style="background-color: #0066FF; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                        Add Your Inventory
+                    </a>
+                </div>
+                <p style="color: #666; font-size: 12px; margin-top: 30px;">
+                    Need help? Reply to this email for support.
+                </p>
+            </div>
+        </body>
+    </html>
+    """
+
+def get_email_template_new_lead(rental_house_name: str, filmmaker_name: str, project_snippet: str, lead_id: str):
+    """New lead notification for rental house"""
+    return f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #121212; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="color: #0066FF; margin: 0;">New Lead Request!</h1>
+            </div>
+            <div style="background-color: #f5f5f5; padding: 30px; border-radius: 0 0 8px 8px;">
+                <p style="color: #333; font-size: 16px;">Hi {rental_house_name},</p>
+                <p style="color: #333; font-size: 16px;">
+                    You have a new quote request from <strong>{filmmaker_name}</strong>.
+                </p>
+                <div style="background-color: white; padding: 20px; border-left: 4px solid #0066FF; margin: 20px 0;">
+                    <p style="color: #666; font-size: 14px; margin: 0;">
+                        <strong>Project:</strong> {project_snippet}
+                    </p>
+                </div>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="{APP_URL}/rental-house/leads/{lead_id}" 
+                       style="background-color: #0066FF; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                        View Lead & Send Quote
+                    </a>
+                </div>
+                <p style="color: #666; font-size: 12px; margin-top: 30px;">
+                    Respond quickly to increase your chances of winning this rental!
+                </p>
+            </div>
+        </body>
+    </html>
+    """
+
+def get_email_template_quote_received(filmmaker_name: str, rental_house_name: str, amount: float, lead_id: str):
+    """Quote received notification for filmmaker"""
+    return f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #121212; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="color: #0066FF; margin: 0;">You Received a Quote!</h1>
+            </div>
+            <div style="background-color: #f5f5f5; padding: 30px; border-radius: 0 0 8px 8px;">
+                <p style="color: #333; font-size: 16px;">Hi {filmmaker_name},</p>
+                <p style="color: #333; font-size: 16px;">
+                    <strong>{rental_house_name}</strong> sent you a quote for your project.
+                </p>
+                <div style="background-color: white; padding: 20px; text-align: center; margin: 20px 0;">
+                    <p style="color: #666; font-size: 14px; margin: 0;">Total Amount</p>
+                    <p style="color: #0066FF; font-size: 32px; font-weight: bold; margin: 10px 0;">
+                        ${amount:.2f}<span style="font-size: 16px; color: #666;">/day</span>
+                    </p>
+                </div>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="{APP_URL}/filmmaker/leads/{lead_id}" 
+                       style="background-color: #0066FF; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                        View Quote Details
+                    </a>
+                </div>
+                <p style="color: #666; font-size: 12px; margin-top: 30px;">
+                    Review the quote and book when you're ready!
+                </p>
+            </div>
+        </body>
+    </html>
+    """
+
+def get_email_template_booking_confirmed(filmmaker_name: str, rental_house_name: str, amount: float, gear_list: List[str], lead_id: str):
+    """Booking confirmation for filmmaker"""
+    gear_items_html = "".join([f"<li style='color: #333; padding: 5px 0;'>{item}</li>" for item in gear_list])
+    
+    return f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #22C55E; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="color: white; margin: 0;">Booking Confirmed!</h1>
+            </div>
+            <div style="background-color: #f5f5f5; padding: 30px; border-radius: 0 0 8px 8px;">
+                <p style="color: #333; font-size: 16px;">Hi {filmmaker_name},</p>
+                <p style="color: #333; font-size: 16px;">
+                    Your booking with <strong>{rental_house_name}</strong> is confirmed!
+                </p>
+                <div style="background-color: white; padding: 20px; margin: 20px 0;">
+                    <h3 style="color: #0066FF; margin-top: 0;">Gear List:</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        {gear_items_html}
+                    </ul>
+                    <div style="border-top: 2px solid #eee; margin: 20px 0; padding-top: 20px;">
+                        <p style="color: #666; margin: 5px 0;">Total Amount: <strong style="color: #0066FF;">${amount:.2f}/day</strong></p>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="{APP_URL}/filmmaker/leads/{lead_id}" 
+                       style="background-color: #0066FF; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                        View Booking Details
+                    </a>
+                </div>
+                <p style="color: #666; font-size: 12px; margin-top: 30px;">
+                    The rental house will contact you to arrange pickup/delivery.
+                </p>
+            </div>
+        </body>
+    </html>
+    """
+
+def get_email_template_new_booking(rental_house_name: str, filmmaker_name: str, filmmaker_email: str, amount: float, gear_list: List[str], lead_id: str):
+    """New booking notification for rental house"""
+    gear_items_html = "".join([f"<li style='color: #333; padding: 5px 0;'>{item}</li>" for item in gear_list])
+    
+    return f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #22C55E; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="color: white; margin: 0;">New Paid Booking!</h1>
+            </div>
+            <div style="background-color: #f5f5f5; padding: 30px; border-radius: 0 0 8px 8px;">
+                <p style="color: #333; font-size: 16px;">Hi {rental_house_name},</p>
+                <p style="color: #333; font-size: 16px;">
+                    Great news! <strong>{filmmaker_name}</strong> has paid and confirmed their booking.
+                </p>
+                <div style="background-color: white; padding: 20px; margin: 20px 0;">
+                    <h3 style="color: #0066FF; margin-top: 0;">Gear to Prepare:</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        {gear_items_html}
+                    </ul>
+                    <div style="border-top: 2px solid #eee; margin: 20px 0; padding-top: 20px;">
+                        <p style="color: #666; margin: 5px 0;">Total Amount: <strong style="color: #22C55E;">${amount:.2f}/day</strong></p>
+                        <p style="color: #666; margin: 5px 0;">Filmmaker: {filmmaker_name}</p>
+                        <p style="color: #666; margin: 5px 0;">Email: {filmmaker_email}</p>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="{APP_URL}/rental-house/leads/{lead_id}" 
+                       style="background-color: #0066FF; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                        View Booking Details
+                    </a>
+                </div>
+                <p style="color: #666; font-size: 12px; margin-top: 30px;">
+                    Please contact the filmmaker to arrange pickup/delivery.
+                </p>
+            </div>
+        </body>
+    </html>
+    """
 
 # ============= MODELS =============
 
@@ -302,6 +570,20 @@ async def select_role(request: Request, data: RoleSelectionRequest, authorizatio
     user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
     if isinstance(user_doc['created_at'], str):
         user_doc['created_at'] = datetime.fromisoformat(user_doc['created_at'])
+    
+    # Send welcome email based on role (fire and forget)
+    if data.role == 'filmmaker':
+        asyncio.create_task(send_email_async(
+            to_email=user.email,
+            subject="Welcome to Script-to-Gear!",
+            html_content=get_email_template_welcome_filmmaker(user.name)
+        ))
+    elif data.role == 'rental_house':
+        asyncio.create_task(send_email_async(
+            to_email=user.email,
+            subject="Welcome to Script-to-Gear!",
+            html_content=get_email_template_welcome_rental_house(user.name, data.company_name or user.name)
+        ))
     
     return User(**user_doc)
 
@@ -834,6 +1116,19 @@ async def create_lead(request: Request, data: LeadCreate, authorization: Optiona
     
     await db.leads.insert_one(lead_doc)
     
+    # Send new lead notification email to rental house (fire and forget)
+    project_snippet = project_doc.get('script_text', '')[:100] + '...' if len(project_doc.get('script_text', '')) > 100 else project_doc.get('script_text', '')
+    asyncio.create_task(send_email_async(
+        to_email=supplier_doc['email'],
+        subject=f"New Quote Request from {user.name}",
+        html_content=get_email_template_new_lead(
+            rental_house_name=supplier_doc.get('company_name', supplier_doc['name']),
+            filmmaker_name=user.name,
+            project_snippet=project_snippet,
+            lead_id=lead_id
+        )
+    ))
+    
     lead_doc['created_at'] = datetime.fromisoformat(lead_doc['created_at'])
     lead_doc['updated_at'] = datetime.fromisoformat(lead_doc['updated_at'])
     return Lead(**lead_doc)
@@ -907,6 +1202,22 @@ async def update_quote(request: Request, lead_id: str, data: QuoteUpdate, author
             "updated_at": datetime.now(timezone.utc).isoformat()
         }}
     )
+    
+    # Send quote notification email to filmmaker if status is "quoted"
+    if data.status == "quoted":
+        filmmaker_doc = await db.users.find_one({"user_id": lead_doc['filmmaker_id']}, {"_id": 0})
+        if filmmaker_doc:
+            total_amount = data.quote_details.get('total_amount', 0.0)
+            asyncio.create_task(send_email_async(
+                to_email=filmmaker_doc['email'],
+                subject=f"Quote Received from {user.company_name or user.name}",
+                html_content=get_email_template_quote_received(
+                    filmmaker_name=filmmaker_doc['name'],
+                    rental_house_name=user.company_name or user.name,
+                    amount=total_amount,
+                    lead_id=lead_id
+                )
+            ))
     
     lead_doc = await db.leads.find_one({"lead_id": lead_id}, {"_id": 0})
     if isinstance(lead_doc['created_at'], str):
@@ -1121,7 +1432,7 @@ async def stripe_webhook(request: Request):
                 }}
             )
             
-            # If payment successful, update lead status
+            # If payment successful, update lead status and send confirmation emails
             if webhook_response.payment_status == "completed":
                 lead_id = transaction.get("lead_id")
                 if lead_id:
@@ -1134,6 +1445,45 @@ async def stripe_webhook(request: Request):
                         }}
                     )
                     logging.info(f"Lead {lead_id} status updated to accepted after payment")
+                    
+                    # Get lead, filmmaker, and rental house details for email
+                    lead_doc = await db.leads.find_one({"lead_id": lead_id}, {"_id": 0})
+                    filmmaker_doc = await db.users.find_one({"user_id": transaction['filmmaker_id']}, {"_id": 0})
+                    rental_house_doc = await db.users.find_one({"user_id": transaction['supplier_id']}, {"_id": 0})
+                    
+                    if lead_doc and filmmaker_doc and rental_house_doc:
+                        # Extract gear list from quote details
+                        quote_details = lead_doc.get('quote_details', {})
+                        gear_items = quote_details.get('items', [])
+                        gear_list = [f"{item.get('name', 'Item')} x{item.get('quantity', 1)}" for item in gear_items]
+                        total_amount = quote_details.get('total_amount', transaction.get('amount', 0))
+                        
+                        # Send booking confirmation to filmmaker
+                        asyncio.create_task(send_email_async(
+                            to_email=filmmaker_doc['email'],
+                            subject="Booking Confirmed! Your Gear Rental is Ready",
+                            html_content=get_email_template_booking_confirmed(
+                                filmmaker_name=filmmaker_doc['name'],
+                                rental_house_name=rental_house_doc.get('company_name', rental_house_doc['name']),
+                                amount=total_amount,
+                                gear_list=gear_list if gear_list else ["Equipment Package"],
+                                lead_id=lead_id
+                            )
+                        ))
+                        
+                        # Send new booking notification to rental house
+                        asyncio.create_task(send_email_async(
+                            to_email=rental_house_doc['email'],
+                            subject=f"New Paid Booking from {filmmaker_doc['name']}",
+                            html_content=get_email_template_new_booking(
+                                rental_house_name=rental_house_doc.get('company_name', rental_house_doc['name']),
+                                filmmaker_name=filmmaker_doc['name'],
+                                filmmaker_email=filmmaker_doc['email'],
+                                amount=total_amount,
+                                gear_list=gear_list if gear_list else ["Equipment Package"],
+                                lead_id=lead_id
+                            )
+                        ))
         
         return {"status": "success"}
     except Exception as e:
