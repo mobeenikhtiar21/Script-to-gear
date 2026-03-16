@@ -95,11 +95,23 @@ Build a production-ready full-stack marketplace application called "Script-to-Ge
   - Booking confirmation emails
   - Email logging to db.email_logs
 
+- Filmmaker Quote Review UI completed
+  - `/filmmaker/leads` - List view of all quote requests
+  - `/filmmaker/leads/{leadId}` - Detailed quote view with Accept & Pay / Decline
+  - Integrated with Stripe checkout for payments
+  - Quote status display (Pending, Quote Ready, Accepted, Declined)
+
+- User Profile Management completed
+  - `/profile` - Shared profile page for all users
+  - Edit name, phone number
+  - Company name editing for rental houses
+  - Backend `PUT /api/users/profile` endpoint
+  - Sidebar navigation links to profile
+
 ---
 
 ## Upcoming Tasks (P1)
-1. **Filmmaker Quote Review UI** - Build interface for filmmakers to view/accept/decline quotes
-2. **User Profile Management** - Profile editing page with backend endpoint
+All P1 tasks completed!
 
 ## Future Tasks (P2)
 1. Systematic Audit Logging
