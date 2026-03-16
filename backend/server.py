@@ -434,74 +434,114 @@ async def create_project(request: Request, data: ProjectCreate, authorization: O
     if user.role != 'filmmaker':
         raise HTTPException(status_code=403, detail="Only filmmakers can create projects")
     
-    # AI Script Analysis
+    project_id = f"proj_{uuid.uuid4().hex[:12]}"
+    
+    # Audit log - Start analysis
+    logging.info(f"Starting AI analysis for project {project_id} by user {user.user_id}")
+    
+    # AI Script Analysis with production-grade error handling
+    ai_analysis_result = None
+    analysis_error = None
+    
     try:
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY,
-            session_id=f"script_analysis_{uuid.uuid4().hex[:8]}",
-            system_message="""You are a professional film production equipment specialist. Analyze film scripts and recommend specific gear with quantities.
-            
-Your response must be a valid JSON object with this structure:
+            session_id=f"script_analysis_{project_id}",
+            system_message="""You are a film production expert. Analyze the user's script or scene description. Extract the following information and return it as JSON only:
 {
-  "scene_analysis": [
-    {
-      "scene_type": "string (e.g., 'moody night exterior', 'dialogue-heavy interview')",
-      "lighting_conditions": "string (day/night/low-light/mixed)",
-      "setting": "string (indoor/outdoor/mixed)",
-      "technical_requirements": "string"
-    }
-  ],
+  "scene_types": ["interior", "exterior", "day", "night"],
+  "lighting_needs": ["low-light", "bright", "moody"],
+  "audio_needs": ["dialogue-heavy", "ambient", "action"],
+  "camera_movement": ["handheld", "dolly", "static"],
+  "special_reqs": ["underwater", "car mount", "aerial"],
   "gear_recommendations": [
     {
-      "category": "string (camera/lens/audio/lighting/support)",
-      "item": "string (specific model or type)",
-      "quantity": number,
-      "rationale": "string (why this gear is needed)"
+      "category": "camera|lens|audio|lighting|support",
+      "item": "specific model or type",
+      "quantity": 1,
+      "rationale": "why this gear is needed"
     }
   ],
-  "production_notes": "string (overall production advice)"
+  "production_notes": "overall production advice"
 }
 
-Be specific with gear recommendations. For example:
-- "moody night exterior" → ARRI Alexa Mini LF or RED Komodo (low-light capable), fast prime lenses (T1.5 or faster), HMI lighting kits
-- "dialogue-heavy interview" → shotgun microphones, lavalier mics, boom pole, audio recorder
-- "handheld documentary" → gimbal stabilizer, lightweight cinema camera, run-and-gun lens kit
-
+Infer these from creative language. Example: 'moody night exterior' means night exterior with low-light needs.
 Only respond with valid JSON, no additional text."""
         ).with_model("openai", "gpt-5.2")
         
         user_message = UserMessage(text=f"Analyze this script and recommend gear:\n\n{data.script_text}")
+        
+        # Call AI with timeout handling
         ai_response = await chat.send_message(user_message)
         
-        # Parse AI response as JSON
+        # Parse AI response as JSON with validation
         import json
         ai_analysis_result = json.loads(ai_response)
         
+        # Validate required fields
+        required_fields = ['scene_types', 'lighting_needs', 'audio_needs', 'camera_movement', 'gear_recommendations']
+        missing_fields = [field for field in required_fields if field not in ai_analysis_result]
+        
+        if missing_fields:
+            logging.warning(f"AI response missing fields: {missing_fields}")
+            # Add default empty arrays for missing fields
+            for field in missing_fields:
+                ai_analysis_result[field] = []
+        
+        # Ensure gear_recommendations is a list
+        if not isinstance(ai_analysis_result.get('gear_recommendations'), list):
+            ai_analysis_result['gear_recommendations'] = []
+        
+        # Audit log - Success
+        logging.info(f"AI analysis successful for project {project_id}: {len(ai_analysis_result.get('gear_recommendations', []))} recommendations")
+        
     except json.JSONDecodeError as e:
-        logging.error(f"AI response not valid JSON: {str(e)}")
+        analysis_error = f"AI returned invalid JSON format"
+        logging.error(f"JSON decode error for project {project_id}: {str(e)}, Response: {ai_response[:200] if 'ai_response' in locals() else 'No response'}")
         ai_analysis_result = {
-            "error": "AI analysis format error",
-            "message": "AI returned invalid format",
-            "gear_recommendations": []
+            "error": "format_error",
+            "error_message": "AI returned invalid format. Please try again.",
+            "scene_types": [],
+            "lighting_needs": [],
+            "audio_needs": [],
+            "camera_movement": [],
+            "special_reqs": [],
+            "gear_recommendations": [],
+            "production_notes": "",
+            "can_retry": True
         }
     except Exception as e:
-        logging.error(f"AI analysis failed: {str(e)}")
+        analysis_error = str(e)
+        logging.error(f"AI analysis failed for project {project_id}: {str(e)}", exc_info=True)
         ai_analysis_result = {
-            "error": "AI analysis failed",
-            "message": str(e),
-            "gear_recommendations": []
+            "error": "api_error",
+            "error_message": "Analysis failed. Please try again.",
+            "scene_types": [],
+            "lighting_needs": [],
+            "audio_needs": [],
+            "camera_movement": [],
+            "special_reqs": [],
+            "gear_recommendations": [],
+            "production_notes": "",
+            "can_retry": True
         }
     
-    project_id = f"proj_{uuid.uuid4().hex[:12]}"
+    # Create project document
     project_doc = {
         "project_id": project_id,
         "filmmaker_id": user.user_id,
         "script_text": data.script_text,
         "ai_analysis_result": ai_analysis_result,
-        "created_at": datetime.now(timezone.utc).isoformat()
+        "analysis_status": "failed" if analysis_error else "completed",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "updated_at": datetime.now(timezone.utc).isoformat()
     }
     
+    # Save to database
     await db.projects.insert_one(project_doc)
+    
+    # Audit log - Project created
+    logging.info(f"Project {project_id} created with status: {project_doc['analysis_status']}")
     
     project_doc['created_at'] = datetime.fromisoformat(project_doc['created_at'])
     return Project(**project_doc)
@@ -542,6 +582,117 @@ async def get_project(request: Request, project_id: str, authorization: Optional
         project_doc['created_at'] = datetime.fromisoformat(project_doc['created_at'])
     
     return Project(**project_doc)
+
+@api_router.post("/projects/{project_id}/retry-analysis")
+async def retry_analysis(request: Request, project_id: str, authorization: Optional[str] = Header(None)):
+    """Retry AI analysis for a failed project"""
+    user = await get_current_user(request, authorization)
+    
+    # Get project
+    project_doc = await db.projects.find_one({"project_id": project_id}, {"_id": 0})
+    
+    if not project_doc:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    if project_doc['filmmaker_id'] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your project")
+    
+    # Audit log - Retry analysis
+    logging.info(f"Retrying AI analysis for project {project_id} by user {user.user_id}")
+    
+    # Run AI analysis again
+    ai_analysis_result = None
+    analysis_error = None
+    
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY,
+            session_id=f"script_analysis_retry_{project_id}_{uuid.uuid4().hex[:4]}",
+            system_message="""You are a film production expert. Analyze the user's script or scene description. Extract the following information and return it as JSON only:
+{
+  "scene_types": ["interior", "exterior", "day", "night"],
+  "lighting_needs": ["low-light", "bright", "moody"],
+  "audio_needs": ["dialogue-heavy", "ambient", "action"],
+  "camera_movement": ["handheld", "dolly", "static"],
+  "special_reqs": ["underwater", "car mount", "aerial"],
+  "gear_recommendations": [
+    {
+      "category": "camera|lens|audio|lighting|support",
+      "item": "specific model or type",
+      "quantity": 1,
+      "rationale": "why this gear is needed"
+    }
+  ],
+  "production_notes": "overall production advice"
+}
+
+Infer these from creative language. Example: 'moody night exterior' means night exterior with low-light needs.
+Only respond with valid JSON, no additional text."""
+        ).with_model("openai", "gpt-5.2")
+        
+        user_message = UserMessage(text=f"Analyze this script and recommend gear:\n\n{project_doc['script_text']}")
+        ai_response = await chat.send_message(user_message)
+        
+        # Parse and validate
+        import json
+        ai_analysis_result = json.loads(ai_response)
+        
+        required_fields = ['scene_types', 'lighting_needs', 'audio_needs', 'camera_movement', 'gear_recommendations']
+        for field in required_fields:
+            if field not in ai_analysis_result:
+                ai_analysis_result[field] = []
+        
+        if not isinstance(ai_analysis_result.get('gear_recommendations'), list):
+            ai_analysis_result['gear_recommendations'] = []
+        
+        logging.info(f"Retry successful for project {project_id}")
+        
+    except json.JSONDecodeError as e:
+        analysis_error = f"AI returned invalid JSON format"
+        logging.error(f"JSON decode error on retry for project {project_id}: {str(e)}")
+        ai_analysis_result = {
+            "error": "format_error",
+            "error_message": "AI returned invalid format. Please try again.",
+            "scene_types": [],
+            "lighting_needs": [],
+            "audio_needs": [],
+            "camera_movement": [],
+            "special_reqs": [],
+            "gear_recommendations": [],
+            "production_notes": "",
+            "can_retry": True
+        }
+    except Exception as e:
+        analysis_error = str(e)
+        logging.error(f"Retry analysis failed for project {project_id}: {str(e)}", exc_info=True)
+        ai_analysis_result = {
+            "error": "api_error",
+            "error_message": "Analysis failed. Please try again.",
+            "scene_types": [],
+            "lighting_needs": [],
+            "audio_needs": [],
+            "camera_movement": [],
+            "special_reqs": [],
+            "gear_recommendations": [],
+            "production_notes": "",
+            "can_retry": True
+        }
+    
+    # Update project
+    await db.projects.update_one(
+        {"project_id": project_id},
+        {"$set": {
+            "ai_analysis_result": ai_analysis_result,
+            "analysis_status": "failed" if analysis_error else "completed",
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }}
+    )
+    
+    return {
+        "project_id": project_id,
+        "status": "failed" if analysis_error else "completed",
+        "analysis": ai_analysis_result
+    }
 
 # ============= PROJECT GEAR ROUTES =============
 
