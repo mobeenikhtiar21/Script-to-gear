@@ -14,6 +14,8 @@ import InventoryManagement from './pages/InventoryManagement';
 import AddEditGear from './pages/AddEditGear';
 import LeadsManagement from './pages/LeadsManagement';
 import RentalHouseLeadDetail from './pages/RentalHouseLeadDetail';
+import PaymentsSetup from './pages/PaymentsSetup';
+import PaymentsSuccess from './pages/PaymentsSuccess';
 import ManageGear from './pages/ManageGear';
 import Leads from './pages/Leads';
 import LeadDetail from './pages/LeadDetail';
@@ -51,6 +53,8 @@ export default function AppRouter() {
       <Route path="/rental-house/inventory/edit/:gearId" element={<ProtectedRoute><AddEditGear /></ProtectedRoute>} />
       <Route path="/rental-house/leads" element={<ProtectedRoute><LeadsManagement /></ProtectedRoute>} />
       <Route path="/rental-house/leads/:leadId" element={<ProtectedRoute><RentalHouseLeadDetail /></ProtectedRoute>} />
+      <Route path="/rental-house/payments" element={<ProtectedRoute><PaymentsSetup /></ProtectedRoute>} />
+      <Route path="/rental-house/payments/success" element={<ProtectedRoute><PaymentsSuccess /></ProtectedRoute>} />
       <Route path="/rental-house/gear" element={<ProtectedRoute><ManageGear /></ProtectedRoute>} />
       
       {/* Shared Routes */}

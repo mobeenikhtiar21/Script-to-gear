@@ -29,10 +29,10 @@ export default function RentalHouseSidebar({ user, onLogout }) {
       testId: 'nav-inventory'
     },
     {
-      label: 'Settings',
+      label: 'Payments',
       icon: Settings,
-      path: '/rental-house/settings',
-      testId: 'nav-settings'
+      path: '/rental-house/payments',
+      testId: 'nav-payments'
     }
   ];
   

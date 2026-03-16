@@ -48,6 +48,7 @@ class User(BaseModel):
     phone: Optional[str] = None
     company_name: Optional[str] = None
     stripe_account_id: Optional[str] = None
+    stripe_onboarding_complete: bool = False
     created_at: datetime
 
 class RoleSelectionRequest(BaseModel):
@@ -1119,11 +1120,273 @@ async def stripe_webhook(request: Request):
                     "updated_at": datetime.now(timezone.utc).isoformat()
                 }}
             )
+            
+            # If payment successful, update lead status
+            if webhook_response.payment_status == "completed":
+                lead_id = transaction.get("lead_id")
+                if lead_id:
+                    await db.leads.update_one(
+                        {"lead_id": lead_id},
+                        {"$set": {
+                            "status": "accepted",
+                            "payment_status": "completed",
+                            "updated_at": datetime.now(timezone.utc).isoformat()
+                        }}
+                    )
+                    logging.info(f"Lead {lead_id} status updated to accepted after payment")
         
         return {"status": "success"}
     except Exception as e:
         logging.error(f"Webhook error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
+
+# ============= STRIPE CONNECT ROUTES =============
+
+@api_router.post("/stripe/connect/onboard")
+async def create_stripe_connect_account(request: Request, authorization: Optional[str] = Header(None)):
+    """Create Stripe Connect account for rental house"""
+    user = await get_current_user(request, authorization)
+    
+    if user.role != 'rental_house':
+        raise HTTPException(status_code=403, detail="Only rental houses can connect Stripe")
+    
+    body = await request.json()
+    return_url = body.get('return_url')
+    refresh_url = body.get('refresh_url')
+    
+    if not return_url or not refresh_url:
+        raise HTTPException(status_code=400, detail="return_url and refresh_url required")
+    
+    try:
+        # Import Stripe library
+        import stripe
+        stripe.api_key = STRIPE_API_KEY
+        
+        # Check if user already has Stripe account
+        if user.stripe_account_id:
+            # Create account link for existing account
+            account_link = stripe.AccountLink.create(
+                account=user.stripe_account_id,
+                refresh_url=refresh_url,
+                return_url=return_url,
+                type='account_onboarding'
+            )
+            
+            logging.info(f"Created account link for existing Stripe account {user.stripe_account_id}")
+            
+            return {
+                "url": account_link.url,
+                "account_id": user.stripe_account_id
+            }
+        
+        # Create new Stripe Connect account
+        account = stripe.Account.create(
+            type='express',
+            country='US',
+            email=user.email,
+            capabilities={
+                'card_payments': {'requested': True},
+                'transfers': {'requested': True}
+            },
+            business_type='company',
+            company={
+                'name': user.company_name or user.name
+            }
+        )
+        
+        # Save account ID to database
+        await db.users.update_one(
+            {"user_id": user.user_id},
+            {"$set": {"stripe_account_id": account.id}}
+        )
+        
+        # Create account link
+        account_link = stripe.AccountLink.create(
+            account=account.id,
+            refresh_url=refresh_url,
+            return_url=return_url,
+            type='account_onboarding'
+        )
+        
+        logging.info(f"Created new Stripe Connect account {account.id} for user {user.user_id}")
+        
+        return {
+            "url": account_link.url,
+            "account_id": account.id
+        }
+        
+    except Exception as e:
+        logging.error(f"Stripe Connect onboarding failed: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to create Stripe account: {str(e)}")
+
+@api_router.get("/stripe/connect/status")
+async def get_stripe_connect_status(request: Request, authorization: Optional[str] = Header(None)):
+    """Get Stripe Connect onboarding status"""
+    user = await get_current_user(request, authorization)
+    
+    if user.role != 'rental_house':
+        raise HTTPException(status_code=403, detail="Only rental houses can check Stripe status")
+    
+    if not user.stripe_account_id:
+        return {
+            "connected": False,
+            "onboarding_complete": False,
+            "account_id": None
+        }
+    
+    try:
+        import stripe
+        stripe.api_key = STRIPE_API_KEY
+        
+        account = stripe.Account.retrieve(user.stripe_account_id)
+        
+        # Check if onboarding is complete
+        charges_enabled = account.charges_enabled
+        details_submitted = account.details_submitted
+        
+        onboarding_complete = charges_enabled and details_submitted
+        
+        # Update database if status changed
+        if onboarding_complete != user.stripe_onboarding_complete:
+            await db.users.update_one(
+                {"user_id": user.user_id},
+                {"$set": {"stripe_onboarding_complete": onboarding_complete}}
+            )
+            logging.info(f"Updated Stripe onboarding status for user {user.user_id}: {onboarding_complete}")
+        
+        return {
+            "connected": True,
+            "onboarding_complete": onboarding_complete,
+            "account_id": user.stripe_account_id,
+            "charges_enabled": charges_enabled,
+            "details_submitted": details_submitted
+        }
+        
+    except Exception as e:
+        logging.error(f"Failed to check Stripe status: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to check Stripe status")
+
+@api_router.post("/stripe/checkout/create")
+async def create_stripe_checkout(request: Request, authorization: Optional[str] = Header(None)):
+    """Create Stripe Checkout session for filmmaker to pay rental house"""
+    user = await get_current_user(request, authorization)
+    
+    if user.role != 'filmmaker':
+        raise HTTPException(status_code=403, detail="Only filmmakers can create checkout sessions")
+    
+    body = await request.json()
+    lead_id = body.get('lead_id')
+    success_url = body.get('success_url')
+    cancel_url = body.get('cancel_url')
+    
+    if not lead_id or not success_url or not cancel_url:
+        raise HTTPException(status_code=400, detail="lead_id, success_url, and cancel_url required")
+    
+    # Get lead
+    lead = await db.leads.find_one({"lead_id": lead_id}, {"_id": 0})
+    
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    
+    if lead['filmmaker_id'] != user.user_id:
+        raise HTTPException(status_code=403, detail="Not your lead")
+    
+    if lead['status'] != 'quoted':
+        raise HTTPException(status_code=400, detail="Lead must be in quoted status")
+    
+    if not lead.get('quote_details'):
+        raise HTTPException(status_code=400, detail="No quote details found")
+    
+    # Get rental house info
+    rental_house = await db.users.find_one({"user_id": lead['supplier_id']}, {"_id": 0})
+    
+    if not rental_house:
+        raise HTTPException(status_code=404, detail="Rental house not found")
+    
+    if not rental_house.get('stripe_account_id'):
+        raise HTTPException(status_code=400, detail="Rental house hasn't connected Stripe yet")
+    
+    if not rental_house.get('stripe_onboarding_complete'):
+        raise HTTPException(status_code=400, detail="Rental house hasn't completed Stripe onboarding")
+    
+    # Calculate amounts
+    total_amount = lead['quote_details']['total_amount']
+    platform_fee = total_amount * 0.10  # 10% platform fee
+    rental_house_amount = total_amount - platform_fee
+    
+    # Convert to cents
+    total_cents = int(total_amount * 100)
+    platform_fee_cents = int(platform_fee * 100)
+    
+    try:
+        import stripe
+        stripe.api_key = STRIPE_API_KEY
+        
+        # Create Checkout session with application fee and transfer
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': f'Equipment Rental - Lead #{lead_id}',
+                        'description': f'Rental from {rental_house.get("company_name", rental_house["name"])}'
+                    },
+                    'unit_amount': total_cents
+                },
+                'quantity': 1
+            }],
+            mode='payment',
+            success_url=success_url,
+            cancel_url=cancel_url,
+            payment_intent_data={
+                'application_fee_amount': platform_fee_cents,
+                'transfer_data': {
+                    'destination': rental_house['stripe_account_id']
+                },
+                'metadata': {
+                    'lead_id': lead_id,
+                    'project_id': lead['project_id'],
+                    'filmmaker_id': user.user_id,
+                    'supplier_id': lead['supplier_id'],
+                    'platform_fee': str(platform_fee),
+                    'rental_house_amount': str(rental_house_amount)
+                }
+            }
+        )
+        
+        # Create payment transaction record
+        transaction_id = f"txn_{uuid.uuid4().hex[:12]}"
+        await db.payment_transactions.insert_one({
+            "transaction_id": transaction_id,
+            "session_id": session.id,
+            "lead_id": lead_id,
+            "filmmaker_id": user.user_id,
+            "supplier_id": lead['supplier_id'],
+            "amount": total_amount,
+            "currency": "usd",
+            "platform_fee": platform_fee,
+            "supplier_amount": rental_house_amount,
+            "payment_status": "pending",
+            "stripe_account_id": rental_house['stripe_account_id'],
+            "metadata": {
+                "project_id": lead['project_id'],
+                "quote_details": lead['quote_details']
+            },
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        })
+        
+        logging.info(f"Created Stripe Checkout session {session.id} for lead {lead_id}, total: ${total_amount}, platform fee: ${platform_fee}")
+        
+        return {
+            "url": session.url,
+            "session_id": session.id
+        }
+        
+    except Exception as e:
+        logging.error(f"Failed to create Stripe Checkout: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to create checkout session: {str(e)}")
 
 # ============= RENTAL HOUSE ROUTES =============
 
