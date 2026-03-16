@@ -1,0 +1,198 @@
+{
+  "identity": {
+    "name": "Script-to-Gear",
+    "description": "The AI-powered marketplace connecting filmmakers with rental houses. Cinematic precision meets SaaS utility.",
+    "tone": "Professional, Technical, Cinematic, High-Performance, Trusted",
+    "aesthetic": "Dark Mode Only, Industrial, RED/ARRI inspired, Precision Grids"
+  },
+  "theme": {
+    "mode": "dark",
+    "primary_color": "#0066FF",
+    "background_color": "#121212",
+    "font_family": "Inter",
+    "border_radius": "0.375rem"
+  },
+  "colors": {
+    "background": {
+      "default": "#121212",
+      "paper": "#1A1A1A",
+      "subtle": "#222222"
+    },
+    "text": {
+      "primary": "#EDEDED",
+      "secondary": "#A1A1A1",
+      "muted": "#666666",
+      "accent": "#0066FF"
+    },
+    "border": {
+      "default": "#333333",
+      "active": "#555555",
+      "focus": "#0066FF"
+    },
+    "semantic": {
+      "primary": "#0066FF",
+      "primary_hover": "#0052CC",
+      "success": "#22C55E",
+      "warning": "#EAB308",
+      "error": "#EF4444",
+      "info": "#3B82F6"
+    }
+  },
+  "typography": {
+    "font_family": {
+      "sans": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "headings": {
+      "h1": {
+        "size": "text-4xl md:text-5xl lg:text-6xl",
+        "weight": "font-bold",
+        "tracking": "tracking-tight",
+        "line_height": "leading-none"
+      },
+      "h2": {
+        "size": "text-3xl md:text-4xl",
+        "weight": "font-semibold",
+        "tracking": "tracking-tight"
+      },
+      "h3": {
+        "size": "text-2xl",
+        "weight": "font-medium",
+        "tracking": "tracking-tight"
+      }
+    },
+    "body": {
+      "base": "text-base leading-relaxed text-gray-300",
+      "small": "text-sm leading-normal text-gray-400",
+      "mono": "font-mono text-sm tracking-wide text-gray-400"
+    }
+  },
+  "layout_strategies": {
+    "container": {
+      "max_width": "max-w-7xl",
+      "padding": "px-4 sm:px-6 lg:px-8",
+      "center": "mx-auto"
+    },
+    "grid_system": {
+      "bento_dashboard": "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6",
+      "dense_table": "w-full border-collapse text-left",
+      "form_layout": "grid grid-cols-1 md:grid-cols-2 gap-6"
+    },
+    "spacing": {
+      "section": "py-16 md:py-24",
+      "element": "space-y-6"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#0066FF] hover:bg-[#0052CC] text-white font-medium px-6 py-2.5 rounded-md transition-colors shadow-[0_0_15px_rgba(0,102,255,0.3)]",
+      "secondary": "bg-[#222222] hover:bg-[#333333] text-gray-200 border border-[#444444] font-medium px-6 py-2.5 rounded-md transition-colors",
+      "ghost": "text-gray-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-md transition-colors",
+      "destructive": "bg-red-900/20 text-red-500 hover:bg-red-900/40 border border-red-900/50"
+    },
+    "cards": {
+      "base": "bg-[#1A1A1A] border border-[#333333] rounded-lg p-6 shadow-lg hover:border-[#444444] transition-colors",
+      "interactive": "group cursor-pointer hover:border-[#0066FF]/50 hover:shadow-[0_0_20px_rgba(0,102,255,0.1)] transition-all duration-300",
+      "feature": "bg-gradient-to-br from-[#1A1A1A] to-[#121212] border border-[#333333] p-8 rounded-xl"
+    },
+    "inputs": {
+      "base": "bg-[#0F0F0F] border border-[#333333] text-white placeholder:text-gray-600 focus:border-[#0066FF] focus:ring-1 focus:ring-[#0066FF] rounded-md px-4 py-2.5 w-full transition-all",
+      "label": "block text-sm font-medium text-gray-400 mb-1.5"
+    },
+    "tables": {
+      "header": "bg-[#1A1A1A] text-gray-400 text-xs uppercase tracking-wider font-semibold py-3 px-4 border-b border-[#333333]",
+      "row": "border-b border-[#333333] hover:bg-[#1A1A1A]/50 transition-colors",
+      "cell": "py-3 px-4 text-sm text-gray-300"
+    },
+    "status_badges": {
+      "success": "bg-green-900/30 text-green-400 border border-green-900/50 px-2.5 py-0.5 rounded-full text-xs font-medium",
+      "warning": "bg-yellow-900/30 text-yellow-400 border border-yellow-900/50 px-2.5 py-0.5 rounded-full text-xs font-medium",
+      "error": "bg-red-900/30 text-red-400 border border-red-900/50 px-2.5 py-0.5 rounded-full text-xs font-medium",
+      "neutral": "bg-gray-800 text-gray-400 border border-gray-700 px-2.5 py-0.5 rounded-full text-xs font-medium"
+    }
+  },
+  "visual_enhancers": {
+    "shadows": {
+      "glow_blue": "0 0 20px rgba(0, 102, 255, 0.15)",
+      "depth": "0 10px 30px -10px rgba(0, 0, 0, 0.5)"
+    },
+    "gradients": {
+      "hero_overlay": "linear-gradient(to bottom, transparent 0%, #121212 100%)",
+      "subtle_glow": "radial-gradient(circle at center, rgba(0,102,255,0.08) 0%, transparent 70%)"
+    },
+    "textures": {
+      "noise": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E\")"
+    }
+  },
+  "motion": {
+    "transitions": {
+      "default": "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+      "smooth": "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
+    },
+    "animations": {
+      "fade_in": {
+        "initial": { "opacity": 0, "y": 10 },
+        "animate": { "opacity": 1, "y": 0 },
+        "transition": { "duration": 0.4 }
+      },
+      "slide_up": {
+        "initial": { "opacity": 0, "y": 20 },
+        "animate": { "opacity": 1, "y": 0 },
+        "transition": { "duration": 0.5, "ease": "easeOut" }
+      },
+      "scale_in": {
+        "initial": { "opacity": 0, "scale": 0.95 },
+        "animate": { "opacity": 1, "scale": 1 },
+        "transition": { "duration": 0.3 }
+      }
+    }
+  },
+  "image_urls": {
+    "hero": [
+      {
+        "url": "https://images.unsplash.com/photo-1519800342810-b72ef13bbd46?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwzfHxjaW5lbWF0aWMlMjBmaWxtJTIwY2FtZXJhJTIwZ2VhciUyMGFycmklMjBhbGV4YSUyMHJlZCUyMGtvbW9kbyUyMGZpbG0lMjBzZXQlMjBiZWhpbmQlMjB0aGUlMjBzY2VuZXN8ZW58MHx8fHwxNzczNjg3MjM0fDA&ixlib=rb-4.1.0&q=85",
+        "description": "ARRI Alexa camera close-up, high-tech, cinematic",
+        "category": "hero_background"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1599240211563-17590b1af857?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHw0fHxjaW5lbWF0aWMlMjBmaWxtJTIwY2FtZXJhJTIwZ2VhciUyMGFycmklMjBhbGV4YSUyMHJlZCUyMGtvbW9kbyUyMGZpbG0lMjBzZXQlMjBiZWhpbmQlMjB0aGUlMjBzY2VuZXN8ZW58MHx8fHwxNzczNjg3MjM0fDA&ixlib=rb-4.1.0&q=85",
+        "description": "RED Cinema Camera detail, mechanical precision",
+        "category": "feature_card"
+      }
+    ],
+    "filmmaker": [
+      {
+        "url": "https://images.unsplash.com/photo-1634812930988-141ddf8ecab3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwxfHxjaW5lbWF0aWMlMjBmaWxtJTIwY2FtZXJhJTIwZ2VhciUyMGFycmklMjBhbGV4YSUyMHJlZCUyMGtvbW9kbyUyMGZpbG0lMjBzZXQlMjBiZWhpbmQlMjB0aGUlMjBzY2VuZXN8ZW58MHx8fHwxNzczNjg3MjM0fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Filmmaker holding camera, on set",
+        "category": "user_persona"
+      }
+    ]
+  },
+  "accessibility": {
+    "contrast_check": "Ensure all text meets WCAG AA (4.5:1) against the dark background. Avoid dark gray on black.",
+    "interactive_elements": "All buttons and links must have a focus state visible (e.g., ring-2 ring-blue-500).",
+    "reduced_motion": "Respect prefers-reduced-motion media query for all animations."
+  },
+  "instructions_to_main_agent": [
+    "STRICTLY follow the dark theme guidelines. No light mode toggles.",
+    "Use 'Inter' font for all UI text. Use 'JetBrains Mono' or 'Monospace' for technical specs (lens data, prices, sensor sizes).",
+    "Implement the 'Cinematic' vibe by using high contrast, sharp edges, and subtle blue glows.",
+    "For the 'Script Analysis' feature, visualize the data. Don't just list text. Use progress bars, tags, or icons.",
+    "Ensure the 'Rental House' dashboard is dense and data-rich (like a spreadsheet or camera menu).",
+    "Ensure the 'Filmmaker' dashboard is visual and project-focused (like a portfolio).",
+    "Add 'data-testid' to all interactive elements for testing."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Avoid 'AI slop' aesthetic (generic centered layouts, gradients).",
+    "Create depth through layered design elements with z-index hierarchy.",
+    "Use glass-morphism effects with backdrop filters (12-24px blur) for overlays.",
+    "Every interaction needs micro-animations (hover, focus, active).",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures and noise overlays separate good from extraordinary.",
+    "NEVER use AI assistant Emoji characters like 🤖🧠 in the UI.",
+    "Prioritize using pre-existing components from src/components/ui.",
+    "Use 'sonner' for toasts.",
+    "Components MUST use named exports.",
+    "Pages MUST use default exports."
+  ]
+}
