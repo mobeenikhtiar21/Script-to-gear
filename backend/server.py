@@ -526,10 +526,30 @@ async def create_session(request: Request):
     if isinstance(user_doc['created_at'], str):
         user_doc['created_at'] = datetime.fromisoformat(user_doc['created_at'])
     
-    return {
-        "user": User(**user_doc).model_dump(),
+    user_obj = User(**user_doc)
+    
+    # Create response with Set-Cookie header
+    # Serialize user properly for JSON
+    user_data = user_obj.model_dump()
+    user_data['created_at'] = user_data['created_at'].isoformat() if isinstance(user_data['created_at'], datetime) else user_data['created_at']
+    
+    response = JSONResponse(content={
+        "user": user_data,
         "session_token": session_token
-    }
+    })
+    
+    # Set cookie - CRITICAL for session persistence
+    response.set_cookie(
+        key="session_token",
+        value=session_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=7 * 24 * 60 * 60,  # 7 days
+        path="/"
+    )
+    
+    return response
 
 @api_router.get("/auth/me")
 async def get_me(request: Request, authorization: Optional[str] = Header(None)):
